@@ -1,0 +1,35 @@
+{
+  "name": "QuizardServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node index",
+    "start": "nodemon index",
+    "client": "cd ../QuizardClient && npm start",
+    "dev": "concurrently -n 'server,client' -c 'green,blue' \"nodemon index.js\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ljaquel/QuizardServer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ljaquel/QuizardServer/issues"
+  },
+  "homepage": "https://github.com/Ljaquel/QuizardServer#readme",
+  "dependencies": {
+    "apollo-server": "^3.3.0",
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^6.3.0",
+    "graphql": "^15.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
