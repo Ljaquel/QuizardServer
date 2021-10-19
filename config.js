@@ -2,14 +2,12 @@ const dotenv = require('dotenv');
 const res = dotenv.config();
 let envs;
 
-if(!('error' in res)) {
+if(process.env.NODE_ENV === 'development') {
   envs = res.parsed;
-} 
-else {
+} else {
   envs = {
     MONGODB: process.env.MONGODB,
-    SECRET_KEY: process.env.SECRET_KEY,
-    ENVIRONMENT: process.env.ENVIRONMENT
+    SECRET_KEY: process.env.SECRET_KEY
   }
 }
 
