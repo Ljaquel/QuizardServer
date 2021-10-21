@@ -15,7 +15,8 @@ const quizSchema = new Schema({
     stats: Object,
     content: Array,
     backgroundImage: Buffer,
-    thumbnail: Buffer
+    thumbnail: Buffer,
+    createdAt: String
 });
 
 module.exports = model('Quiz', quizSchema);
