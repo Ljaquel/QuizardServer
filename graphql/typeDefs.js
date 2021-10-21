@@ -35,6 +35,7 @@ module.exports = gql`
       content: [Question]!
       backgroundImage: String
       thumbnail: String
+      createdAt: String!
     }
     input RegisterInput {
         username: String!
