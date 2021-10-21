@@ -4,12 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "node index",
     "start": "node index",
-    "devstart": "nodemon index",
-    "client": "cd ../QuizardClient && npm start",
     "dev": "concurrently -n 'server,client' -c 'green,blue' \"nodemon index.js\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client": "cd ../QuizardClient && npm start"
   },
   "repository": {
     "type": "git",
