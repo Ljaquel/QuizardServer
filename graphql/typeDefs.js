@@ -20,9 +20,10 @@ module.exports = gql`
       choices: [String!]!
     }
     type Quiz {
+      id: ID!
       name: String!
       description: String!
-      publishedDate: String!
+      publishedDate: String
       published: Boolean!
       creator: String!
       timesPlayed: Int!
