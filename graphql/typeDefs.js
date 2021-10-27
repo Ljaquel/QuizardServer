@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
 
     type User {
-        id: ID!
+        id: String!
         email: String!
         token: String!
         username: String!
@@ -15,7 +15,7 @@ module.exports = gql`
       choices: [String!]!
     }
     type Quiz {
-      id: ID!
+      id: String!
       name: String!
       description: String!
       publishedDate: String
@@ -40,14 +40,13 @@ module.exports = gql`
         email: String!
     }
     type Query {
-
         getQuizzes: [Quiz]
-        getQuiz(quizId: ID!): Quiz
+        getQuiz(quizId: String!): Quiz
     }
     type Mutation {
         register(registerInput: RegisterInput): User!
         login(username: String!, password: String!): User!
         createQuiz( name: String!, creator: String! ): Quiz!
-        deleteQuiz(quizId: ID!): String!
+        deleteQuiz(quizId: String!): String!
     }
 `
