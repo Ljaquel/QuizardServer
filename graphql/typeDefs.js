@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
 
     type User {
-        id: ID!
+        _id: ID!
         email: String!
         token: String!
         username: String!
@@ -15,7 +15,7 @@ module.exports = gql`
       choices: [String!]!
     }
     type Quiz {
-      id: ID!
+      _id: ID!
       name: String!
       description: String!
       publishedDate: String

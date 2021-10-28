@@ -57,7 +57,7 @@ module.exports = {
       const user = checkAuth(context);
       try {
         const quiz = await Quiz.findById(quizId);
-        if (user.id === quiz.creator) {
+        if (user._id === quiz.creator) {
           await quiz.delete();
           return 'Quiz deleted successfully';
         } else {
