@@ -52,9 +52,34 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
-    createQuiz(name: String!, creator: String!): Quiz!
-    deleteQuiz(quizId: ID!): String!
     changePassword(newPassword: String!, confirmPassword: String!): String!
     updateUserFields(updateFields: UserUpdateInput): User
+    createQuiz(name: String!, creator: String!): Quiz!
+    deleteQuiz(quizId: ID!): Quiz!
+    updateQuiz(quizId: ID!, update: QuizInput): Quiz!
+  }
+  input QuizInput {
+    _id: ID
+    name: String
+    description: String
+    publishedDate: String
+    published: Boolean
+    creator: String
+    timesPlayed: Int
+    time: String
+    rating: Int
+    comments: [String]
+    difficulty: String
+    color: String
+    stats: String
+    content: [QuestionInput]
+    backgroundImage: String
+    thumbnail: String
+    createdAt: String
+  }
+  input QuestionInput {
+    question: String
+    answer: Int
+    choices: [String]
   }
 `;

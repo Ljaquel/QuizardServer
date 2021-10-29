@@ -1,6 +1,9 @@
-const { AuthenticationError, UserInputError } = require("apollo-server");
-const Quiz = require("../../models/Quiz");
-const checkAuth = require("../../util/check-auth");
+const { AuthenticationError } = require('apollo-server');
+
+const ObjectId = require('mongoose').Types.ObjectId;
+const Quiz = require('../../models/Quiz');
+const checkAuth = require('../../util/check-auth');
+
 
 module.exports = {
   Query: {
@@ -17,10 +20,9 @@ module.exports = {
     },
     async getQuizzes() {
       try {
-      console.log("All Quizes released")
-        const quizzes = await Quiz.find();
-        return quizzes;
-      } catch (err) {
+        const quizzes = await Quiz.find().sort({ createdAt: -1 });
+        return quizzes
+      } catch(err){
         throw new Error(err);
       }
     },
@@ -40,7 +42,7 @@ module.exports = {
   Mutation: {
     async createQuiz(_, { name, creator }, context) {
       try {
-        const user = checkAuth(context);
+        checkAuth(context);
         const newQuiz = new Quiz({
           name,
           description: "",
@@ -68,20 +70,16 @@ module.exports = {
       }
     },
     async deleteQuiz(_, { quizId }, context) {
-      const user = checkAuth(context);
-      try {
-        o;
-        const quiz = await Quiz.findById(quizId);
-        if (user._id === quiz.creator) {
-          await quiz.delete();
-          return "Quiz deleted successfully";
-        } else {
-          throw new AuthenticationError("Action not allowed");
-        }
-      } catch (err) {
-        console.log(err);
-        throw new Error(err);
-      }
+      checkAuth(context);
+      const filter = { _id: new ObjectId(quizId) }
+      const modified = await Quiz.findOneAndDelete(filter);
+      return modified;
+    },
+    async updateQuiz(_, { quizId, update }, context) {
+      checkAuth(context);
+      const filter = { _id: new ObjectId(quizId) }
+      const modified = await Quiz.findOneAndUpdate(filter, {$set: update}, { new: true });
+      return modified;
     },
   },
 };
