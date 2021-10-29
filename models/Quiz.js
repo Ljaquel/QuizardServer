@@ -1,5 +1,13 @@
 const { model, Schema } = require('mongoose');
 
+const questionSchema = new Schema({
+  question: String,
+  answer: Number,
+  choices: [String]
+})
+
+const Question = model('Question', questionSchema).schema;
+
 const quizSchema = new Schema({
     name: String,
     description: String,
@@ -13,7 +21,7 @@ const quizSchema = new Schema({
     difficulty: String,
     color: String,
     stats: Object,
-    content: Array,
+    content: [Question],
     backgroundImage: Buffer,
     thumbnail: Buffer,
     createdAt: String
