@@ -7,14 +7,13 @@ const checkAuth = require('../../util/check-auth');
 
 module.exports = {
   Query: {
-    async getQuizzesbyUserid(_, { creatorID }) {
+    async getQuizzesByCreator(_, { creatorId }) {
       try { 
-           
-            const quizzes = await Quiz.find({creator : creatorID});
-            console.log("Found")
-            return quizzes;
+        const objectId = new ObjectId(creatorId)
+        const quizzes = await Quiz.find({creator : objectId});
+        return quizzes;
       } catch (err) {
-            console.log("SOMEERROR BIG")
+        console.log(JSON.stringify(err, null, 2));
         throw new Error(err);
       }
     },
