@@ -41,6 +41,12 @@ module.exports = gql`
     }
     type Query {
         getQuizzes: [Quiz]
+
+
+        getQuizzesbyUserid(creatorID: String!): [Quiz]
+      
+
+
         getQuiz(quizId: ID!): Quiz!
     }
     type Mutation {

@@ -1,26 +1,41 @@
-const { AuthenticationError, UserInputError } = require('apollo-server');
-const Quiz = require('../../models/Quiz');
-const checkAuth = require('../../util/check-auth');
+const { AuthenticationError, UserInputError } = require("apollo-server");
+const Quiz = require("../../models/Quiz");
+const checkAuth = require("../../util/check-auth");
 
 module.exports = {
   Query: {
+    async getQuizzesbyUserid(_, { creatorID }) {
+      try { 
+           
+            const quizzes = await Quiz.find({creator : creatorID});
+            console.log("Found")
+            return quizzes;
+      } catch (err) {
+            console.log("SOMEERROR BIG")
+        throw new Error(err);
+      }
+    },
     async getQuizzes() {
       try {
+      console.log("All Quizes released")
         const quizzes = await Quiz.find();
-        return quizzes
-      } catch(err){
+        return quizzes;
+      } catch (err) {
         throw new Error(err);
       }
     },
     async getQuiz(_, { quizId }) {
       try {
         const quiz = await Quiz.findById(quizId);
-        if(quiz) { return quiz; } 
-        else { throw new Error('Quiz not found'); }
-      } catch(err){
+        if (quiz) {
+          return quiz;
+        } else {
+          throw new Error("Quiz not found");
+        }
+      } catch (err) {
         throw new Error(err);
       }
-    }
+    },
   },
   Mutation: {
     async createQuiz(_, { name, creator }, context) {
@@ -42,13 +57,12 @@ module.exports = {
           content: [],
           backgroundImage: "",
           thumbnail: "",
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         });
         const quiz = await newQuiz.save();
         return quiz;
-      }
-      catch(err) {
-        console.log(err)
+      } catch (err) {
+        console.log(err);
         console.log(JSON.stringify(err, null, 2));
         throw new Error(err);
       }
@@ -56,17 +70,18 @@ module.exports = {
     async deleteQuiz(_, { quizId }, context) {
       const user = checkAuth(context);
       try {
+        o;
         const quiz = await Quiz.findById(quizId);
         if (user._id === quiz.creator) {
           await quiz.delete();
-          return 'Quiz deleted successfully';
+          return "Quiz deleted successfully";
         } else {
-          throw new AuthenticationError('Action not allowed');
+          throw new AuthenticationError("Action not allowed");
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
         throw new Error(err);
       }
     },
-  }
-}
+  },
+};
