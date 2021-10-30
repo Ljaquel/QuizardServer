@@ -44,7 +44,7 @@ module.exports = {
         checkAuth(context);
         const newQuiz = new Quiz({
           name,
-          description: "",
+          description: "Provide description here",
           creator,
           publishedDate: "",
           published: false,
@@ -55,7 +55,13 @@ module.exports = {
           difficulty: "easy",
           color: "black",
           stats: {},
-          content: [],
+          content: [
+            {
+              question: "Question?",
+              answer: 1,
+              choices: ["Answer A", "Answer B", "Answer C", "Answer D"]
+            }
+          ],
           backgroundImage: "",
           thumbnail: "",
           createdAt: new Date().toISOString(),
