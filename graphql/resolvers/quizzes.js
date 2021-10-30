@@ -10,7 +10,7 @@ module.exports = {
     async getQuizzesByCreator(_, { creatorId }) {
       try { 
         const objectId = new ObjectId(creatorId)
-        const quizzes = await Quiz.find({creator : objectId});
+        const quizzes = await Quiz.find({creator : objectId}).sort({ createdAt: -1 });
         return quizzes;
       } catch (err) {
         console.log(JSON.stringify(err, null, 2));
