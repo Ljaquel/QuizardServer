@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { UserInputError } = require("apollo-server");
+const { UserInputError, AuthenticationError } = require("apollo-server");
 
 const {
   validateRegisterInput,
@@ -23,7 +23,18 @@ function generateToken(user) {
 }
 
 module.exports = {
-  Query: {},
+  Query: {
+    getUser: async (_, { userId }, context) => {
+      try {
+        const user = await User.findById(userId);
+        if (!user) throw new Error("User does not exist");
+        return user;
+      } catch (err) {
+        console.log(err);
+        throw new Error(err);
+      }
+    },
+  },
   Mutation: {
     async login(_, { username, password }) {
       console.log("Logging in...");
@@ -98,6 +109,29 @@ module.exports = {
         return "There was an error updating your password";
       }
     },
-    updateUserFields: async (_, { updateFields: { email } }) => {},
+    updateUserFields: async (_, { updateFields }, context) => {
+      const user = checkAuth(context);
+      const { _id } = user;
+      try {
+        if (!user) throw new AuthenticationError("You are not authenticated");
+        const updatedUser = await User.findOneAndUpdate(
+          { _id },
+          {
+            ...updateFields,
+          },
+          { new: true, returnOriginal: false }
+        );
+        console.log(updatedUser);
+        const token = generateToken(updatedUser);
+        return {
+          ...updatedUser._doc,
+          _id: updatedUser._id,
+          token,
+        };
+      } catch (error) {
+        console.log(error);
+        throw new Error("There was an error updating the fields");
+      }
+    },
   },
 };

@@ -39,12 +39,11 @@ module.exports = gql`
     email: String!
   }
   input UserUpdateInput {
-    username: String!
-    firstName: String!
-    lastName: String!
-    email: String!
+    username: String
+    email: String
   }
   type Query {
+    getUser(userId: ID!): User
     getQuizzes: [Quiz]
     getQuiz(quizId: ID!): Quiz!
     getQuizzesByCreator(creatorId: ID!): [Quiz]
