@@ -10,7 +10,7 @@ module.exports = {
     async getQuizzesByCreator(_, { creatorId }) {
       try { 
         const objectId = new ObjectId(creatorId)
-        const quizzes = await Quiz.find({creator : objectId}).sort({createdAt: -1});
+        const quizzes = await Quiz.find({creator : objectId}).sort({ createdAt: -1 });
         return quizzes;
       } catch (err) {
         console.log(JSON.stringify(err, null, 2));
@@ -44,7 +44,7 @@ module.exports = {
         checkAuth(context);
         const newQuiz = new Quiz({
           name,
-          description: "",
+          description: "Provide description here",
           creator,
           publishedDate: "",
           published: false,
@@ -54,8 +54,20 @@ module.exports = {
           comments: [],
           difficulty: "easy",
           color: "black",
-          stats: {},
-          content: [],
+          tags: [],
+          stats: {
+            averageScore: null,
+            lowestScore: null,
+            highestScore: null,
+            averageTime: null
+          },
+          content: [
+            {
+              question: "Question?",
+              answer: 1,
+              choices: ["Answer A", "Answer B", "Answer C", "Answer D"]
+            }
+          ],
           backgroundImage: "",
           thumbnail: "",
           createdAt: new Date().toISOString(),

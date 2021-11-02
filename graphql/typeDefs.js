@@ -7,11 +7,12 @@ module.exports = gql`
     token: String!
     username: String!
     createdAt: String!
-  }
-  type Question {
-    question: String!
-    answer: Int!
-    choices: [String!]!
+    name: String
+    creator: Boolean
+    points: Int
+    color: String
+    history: [Result]
+    rewards: Rewards
   }
   type Quiz {
     _id: ID!
@@ -23,10 +24,11 @@ module.exports = gql`
     timesPlayed: Int!
     time: String
     rating: Int!
-    comments: [String!]!
+    comments: [Comment]!
     difficulty: String!
     color: String!
-    stats: String
+    tags: [String]
+    stats: Stats
     content: [Question]!
     backgroundImage: String
     thumbnail: String
@@ -39,12 +41,11 @@ module.exports = gql`
     email: String!
   }
   input UserUpdateInput {
-    username: String!
-    firstName: String!
-    lastName: String!
-    email: String!
+    username: String
+    email: String
   }
   type Query {
+    getUser(userId: ID!): User
     getQuizzes: [Quiz]
     getQuiz(quizId: ID!): Quiz!
     getQuizzesByCreator(creatorId: ID!): [Quiz]
@@ -68,18 +69,54 @@ module.exports = gql`
     timesPlayed: Int
     time: String
     rating: Int
-    comments: [String]
+    comments: [CommentInput]
     difficulty: String
     color: String
-    stats: String
+    tags: [String]
+    stats: StatsInput
     content: [QuestionInput]
     backgroundImage: String
     thumbnail: String
     createdAt: String
   }
+  type Question {
+    question: String!
+    answer: Int!
+    choices: [String!]!
+  }
   input QuestionInput {
     question: String
     answer: Int
     choices: [String]
+  }
+  type Comment {
+    comment: String
+    name: String
+    createdAt: String
+  }
+  input CommentInput {
+    comment: String
+    name: String
+    createdAt: String
+  }
+  type Stats {
+    averageScore: Int,
+    lowestScore: Int,
+    highestScore: Int,
+    averageTime: String
+  }
+  input StatsInput {
+    averageScore: Int,
+    lowestScore: Int,
+    highestScore: Int,
+    averageTime: String
+  }
+  type Result {
+    quizId: String
+    score: Int
+    time: String
+  }
+  type Rewards {
+    badges: String
   }
 `;
