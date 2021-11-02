@@ -54,7 +54,13 @@ module.exports = {
           comments: [],
           difficulty: "easy",
           color: "black",
-          stats: {},
+          tags: [],
+          stats: {
+            averageScore: null,
+            lowestScore: null,
+            highestScore: null,
+            averageTime: null
+          },
           content: [
             {
               question: "Question?",
