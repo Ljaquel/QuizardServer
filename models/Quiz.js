@@ -20,10 +20,11 @@ const quizSchema = new Schema({
     comments: Array,
     difficulty: String,
     color: String,
+    tags: Array,
     stats: Object,
     content: [Question],
-    backgroundImage: Buffer,
-    thumbnail: Buffer,
+    backgroundImage: String,
+    thumbnail: String,
     createdAt: String
 });
 
