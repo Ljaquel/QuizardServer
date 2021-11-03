@@ -49,11 +49,11 @@ module.exports = {
           publishedDate: "",
           published: false,
           timesPlayed: 0,
-          time: "",
+          time: "0",
           rating: 0,
           comments: [],
           difficulty: "easy",
-          color: "black",
+          color: "#ffffff",
           tags: [],
           stats: {
             averageScore: null,
