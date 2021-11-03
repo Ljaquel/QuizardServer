@@ -19,7 +19,7 @@ const quizSchema = new Schema({
     rating: Number,
     comments: Array,
     difficulty: String,
-    color: String,
+    style: Object,
     tags: Array,
     stats: Object,
     content: [Question],
