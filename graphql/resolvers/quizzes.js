@@ -53,7 +53,12 @@ module.exports = {
           rating: 0,
           comments: [],
           difficulty: "easy",
-          color: "#ffffff",
+          style: {
+            color: "#FFFFFF",
+            questionColor: "#475047",
+            backgroundColor: "#abafbb",
+            choiceColor: "#475047",
+          },
           tags: [],
           stats: {
             averageScore: null,

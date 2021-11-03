@@ -26,7 +26,7 @@ module.exports = gql`
     rating: Int!
     comments: [Comment]!
     difficulty: String!
-    color: String!
+    style: Style
     tags: [String]
     stats: Stats
     content: [Question]!
@@ -71,7 +71,7 @@ module.exports = gql`
     rating: Int
     comments: [CommentInput]
     difficulty: String
-    color: String
+    style: StyleInput
     tags: [String]
     stats: StatsInput
     content: [QuestionInput]
@@ -110,6 +110,18 @@ module.exports = gql`
     lowestScore: Int,
     highestScore: Int,
     averageTime: String
+  }
+  type Style {
+    color: String
+    backgroundColor: String
+    questionColor: String
+    choiceColor: String
+  }
+  input StyleInput {
+    color: String
+    backgroundColor: String
+    questionColor: String
+    choiceColor: String
   }
   type Result {
     quizId: String
