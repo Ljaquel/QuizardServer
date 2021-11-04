@@ -46,9 +46,8 @@ module.exports = gql`
   }
   type Query {
     getUser(userId: ID!): User
-    getQuizzes: [Quiz]
+    getQuizzes(filters: QuizInput): [Quiz]
     getQuiz(quizId: ID!): Quiz!
-    getQuizzesByCreator(creatorId: ID!): [Quiz]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
