@@ -7,19 +7,9 @@ const checkAuth = require('../../util/check-auth');
 
 module.exports = {
   Query: {
-    async getQuizzesByCreator(_, { creatorId }) {
-      try { 
-        const objectId = new ObjectId(creatorId)
-        const quizzes = await Quiz.find({creator : objectId}).sort({ createdAt: -1 });
-        return quizzes;
-      } catch (err) {
-        console.log(JSON.stringify(err, null, 2));
-        throw new Error(err);
-      }
-    },
-    async getQuizzes() {
+    async getQuizzes(_, { filters }) {
       try {
-        const quizzes = await Quiz.find().sort({ createdAt: -1 });
+        const quizzes = await Quiz.find(filters).sort({ createdAt: -1 });
         return quizzes
       } catch(err){
         throw new Error(err);
