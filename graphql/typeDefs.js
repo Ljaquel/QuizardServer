@@ -32,6 +32,7 @@ module.exports = gql`
     thumbnail: String
     createdAt: String!
   }
+  union SearchResult = User | Quiz
   input RegisterInput {
     username: String!
     password: String!
@@ -47,11 +48,16 @@ module.exports = gql`
     getQuizzes: [Quiz]
     getQuiz(quizId: ID!): Quiz!
     getQuizzesByCreator(creatorId: ID!): [Quiz]
+    getSearchResults(query: String!): [SearchResult]!
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
-    changePassword(newPassword: String!, confirmPassword: String!): String!
+    changePassword(
+      currentPassword: String!
+      newPassword: String!
+      confirmPassword: String!
+    ): Boolean!
     updateUserFields(updateFields: UserUpdateInput): User
     createQuiz(name: String!, creator: String!): Quiz!
     deleteQuiz(quizId: ID!): Quiz!

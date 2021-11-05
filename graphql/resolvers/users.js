@@ -96,17 +96,24 @@ module.exports = {
         token,
       };
     },
-    changePassword: async (_, { newPassword, confirmPassword }, context) => {
+    changePassword: async (
+      _,
+      { currentPassword, newPassword, confirmPassword },
+      context
+    ) => {
       const user = checkAuth(context);
+      const dbUser = await User.findById(user._id);
+      if (!dbUser) throw new AuthenticationError("You are not a valid user");
       try {
-        if (!user) return "You are not authenticated";
-        if (newPassword === confirmPassword) {
+        if (!user) return false;
+        const match = await bcrypt.compare(currentPassword, dbUser.password);
+        if (match && newPassword === confirmPassword) {
           const password = await bcrypt.hash(newPassword, 10);
           await User.findByIdAndUpdate(user._id, { password });
-          return "Password updated successfully";
+          return true;
         }
       } catch (err) {
-        return "There was an error updating your password";
+        return false;
       }
     },
     updateUserFields: async (_, { updateFields }, context) => {
