@@ -8,7 +8,6 @@ module.exports = gql`
     username: String!
     createdAt: String!
     name: String
-    creator: Boolean
     points: Int
     color: String
     history: [Result]
@@ -40,9 +39,17 @@ module.exports = gql`
     confirmPassword: String!
     email: String!
   }
-  input UserUpdateInput {
-    username: String
+  input UserInput {
+    _id: ID
     email: String
+    token: String
+    username: String
+    createdAt: String
+    name: String
+    points: Int
+    color: String
+    history: [ResultInput]
+    rewards: RewardsInput
   }
   type Query {
     getUser(userId: ID!): User
@@ -53,7 +60,7 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     changePassword(newPassword: String!, confirmPassword: String!): String!
-    updateUserFields(updateFields: UserUpdateInput): User
+    updateUser(fields: UserInput): User!
     createQuiz(name: String!, creator: String!): Quiz!
     deleteQuiz(quizId: ID!): Quiz!
     updateQuiz(quizId: ID!, update: QuizInput): Quiz!
@@ -128,6 +135,18 @@ module.exports = gql`
     time: String
   }
   type Rewards {
-    badges: String
+    level: Int
+    points: Int
+    badges: [String]
+  }
+  input ResultInput {
+    quizId: String
+    score: Int
+    time: String
+  }
+  input RewardsInput {
+    level: Int
+    points: Int
+    badges: [String]
   }
 `;

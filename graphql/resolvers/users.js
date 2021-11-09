@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UserInputError, AuthenticationError } = require("apollo-server");
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const {
   validateRegisterInput,
@@ -87,6 +88,15 @@ module.exports = {
         username,
         password,
         createdAt: new Date().toISOString(),
+        name: "",
+        points: 0,
+        color: "black",
+        history: [],
+        rewards: {
+          level: 0,
+          points: 0,
+          badges: []
+        }
       });
       const res = await newUser.save();
       const token = generateToken(res);
@@ -109,26 +119,17 @@ module.exports = {
         return "There was an error updating your password";
       }
     },
-    updateUserFields: async (_, { updateFields }, context) => {
+    updateUser: async (_, { fields }, context) => {
       const user = checkAuth(context);
-      const { _id } = user;
+      const _id = new ObjectId(user._id)
       try {
         if (!user) throw new AuthenticationError("You are not authenticated");
-        const updatedUser = await User.findOneAndUpdate(
-          { _id },
-          {
-            ...updateFields,
-          },
-          { new: true, returnOriginal: false }
-        );
+        const updatedUser = await User.findOneAndUpdate( { _id }, {$set: fields}, { new: true, returnOriginal: false });
         console.log(updatedUser);
         const token = generateToken(updatedUser);
-        return {
-          ...updatedUser._doc,
-          _id: updatedUser._id,
-          token,
-        };
-      } catch (error) {
+        return { ...updatedUser._doc, _id: updatedUser._id, token };
+      }
+      catch (error) {
         console.log(error);
         throw new Error("There was an error updating the fields");
       }
