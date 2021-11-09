@@ -56,7 +56,7 @@ module.exports = {
       const token = generateToken(user);
       return {
         ...user._doc,
-        _id: user._id,
+        ...user,
         token,
       };
     },
@@ -102,7 +102,7 @@ module.exports = {
       const token = generateToken(res);
       return {
         ...res._doc,
-        _id: res._id,
+        ...res,
         token,
       };
     },
@@ -125,7 +125,6 @@ module.exports = {
       try {
         if (!user) throw new AuthenticationError("You are not authenticated");
         const updatedUser = await User.findOneAndUpdate( { _id }, {$set: fields}, { new: true, returnOriginal: false });
-        console.log(updatedUser);
         const token = generateToken(updatedUser);
         return { ...updatedUser._doc, _id: updatedUser._id, token };
       }
