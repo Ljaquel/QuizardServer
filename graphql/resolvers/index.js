@@ -1,5 +1,7 @@
 const usersResolvers = require("./users");
 const quizzesResolvers = require("./quizzes");
+const User = require("../../models/User");
+const Quiz = require("../../models/Quiz");
 
 module.exports = {
   SearchResult: {
@@ -18,14 +20,37 @@ module.exports = {
   Query: {
     ...usersResolvers.Query,
     ...quizzesResolvers.Query,
-    getSearchResults: async (_, { query }, context) => {
+    getSearchResults: async (_, { query, searchFilter }, context) => {
       console.log(query);
+      console.log(searchFilter);
+      let results = [];
+      let users = [];
+      let quizzes = [];
       const $regex = new RegExp(query, "i");
-      const users = await User.find({ username: { $regex } });
+      switch (searchFilter) {
+        case "User":
+          users = await User.find({
+            $or: [{ username: $regex }, { name: $regex }],
+          });
+          results = users;
+        case "Quiz":
+          quizzes = await Quiz.find({ name: { $regex } });
+          results = quizzes;
+        case "Category":
+          quizzes = await Quiz.find({
+            tags: { $elemMatch: { tags: { $regex } } },
+          });
+          results = quizzes;
+        default:
+          users = await User.find({
+            $or: [{ username: $regex }, { name: $regex }],
+          });
+          quizzes = await Quiz.find({ name: { $regex } });
+          results = [...users, ...quizzes];
+      }
       console.log("users", users);
-      const quizzes = await Quiz.find({ name: { $regex } });
       console.log("quizzes", quizzes);
-      return [...users, ...quizzes];
+      return results;
     },
   },
   Mutation: {

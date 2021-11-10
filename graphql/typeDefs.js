@@ -56,7 +56,7 @@ module.exports = gql`
     getUser(userId: ID!): User
     getQuizzes(filters: QuizInput): [Quiz]
     getQuiz(quizId: ID!): Quiz!
-    getSearchResults(query: String!): [SearchResult]!
+    getSearchResults(query: String!, searchFilter: String): [SearchResult]!
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
