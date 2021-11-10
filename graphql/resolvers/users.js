@@ -62,10 +62,11 @@ module.exports = {
     },
     async register(
       _,
-      { registerInput: { username, email, password, confirmPassword } }
+      { registerInput: {name, username, email, password, confirmPassword } }
     ) {
       console.log("Signing in...");
       const { valid, errors } = validateRegisterInput(
+        name,
         username,
         email,
         password,
@@ -88,7 +89,7 @@ module.exports = {
         username,
         password,
         createdAt: new Date().toISOString(),
-        name: "",
+        name,
         points: 0,
         color: "black",
         history: [],
