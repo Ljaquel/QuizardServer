@@ -23,8 +23,23 @@ function generateToken(user) {
   );
 }
 
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 module.exports = {
   Query: {
+
+    async getUsers(_, { name }) {
+      try {
+        // const users = await User.find({'name': name});
+        const users = await User.find({'name': { $regex: escapeRegExp(name), $options: 'i' }});
+        return users
+      } catch(err){
+        throw new Error(err);
+      }
+    },
+
     getUser: async (_, { userId }, context) => {
       try {
         const user = await User.findById(userId);

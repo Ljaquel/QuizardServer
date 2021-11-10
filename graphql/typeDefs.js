@@ -54,6 +54,7 @@ module.exports = gql`
   }
   type Query {
     getUser(userId: ID!): User
+    getUsers(name:String!): [User]
     getQuizzes(filters: QuizInput): [Quiz]
     getQuiz(quizId: ID!): Quiz!
   }
