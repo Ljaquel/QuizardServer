@@ -7,7 +7,7 @@ module.exports = gql`
     token: String!
     username: String!
     createdAt: String!
-    name: String
+    name: String!
     points: Int
     color: String
     history: [Result]

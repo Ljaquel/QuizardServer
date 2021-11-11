@@ -21,8 +21,7 @@ module.exports = {
     ...usersResolvers.Query,
     ...quizzesResolvers.Query,
     getSearchResults: async (_, { query, searchFilter }, context) => {
-      console.log(query);
-      console.log(searchFilter);
+      console.log(query); 
       let results = [];
       let users = [];
       let quizzes = [];
@@ -33,23 +32,25 @@ module.exports = {
             $or: [{ username: $regex }, { name: $regex }],
           });
           results = users;
+          break;
         case "Quiz":
-          quizzes = await Quiz.find({ name: { $regex } });
+          quizzes = await Quiz.find({ name: { $regex },published : true });
           results = quizzes;
+          break;
         case "Category":
+          console.log("inside category")
+
           quizzes = await Quiz.find({
-            tags: { $elemMatch: { tags: { $regex } } },
-          });
+            tags: { $elemMatch: { $regex } } });
           results = quizzes;
+          break;
         default:
           users = await User.find({
             $or: [{ username: $regex }, { name: $regex }],
           });
           quizzes = await Quiz.find({ name: { $regex } });
           results = [...users, ...quizzes];
-      }
-      console.log("users", users);
-      console.log("quizzes", quizzes);
+      } 
       return results;
     },
   },
