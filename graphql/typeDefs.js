@@ -33,6 +33,7 @@ module.exports = gql`
     thumbnail: String
     createdAt: String!
   }
+  union SearchResult = User | Quiz
   input RegisterInput {
     name:String!
     username: String!
@@ -57,11 +58,12 @@ module.exports = gql`
     getUsers(name:String!): [User]
     getQuizzes(filters: QuizInput): [Quiz]
     getQuiz(quizId: ID!): Quiz!
+    getSearchResults(query: String!, searchFilter: String): [SearchResult]!
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
-    changePassword(newPassword: String!, confirmPassword: String!): String!
+    changePassword(newPassword: String!, confirmPassword: String!): Boolean!
     updateUser(fields: UserInput): User!
     createQuiz(name: String!, creator: String!): Quiz!
     deleteQuiz(quizId: ID!): Quiz!
@@ -108,15 +110,15 @@ module.exports = gql`
     createdAt: String
   }
   type Stats {
-    averageScore: Int,
-    lowestScore: Int,
-    highestScore: Int,
+    averageScore: Int
+    lowestScore: Int
+    highestScore: Int
     averageTime: String
   }
   input StatsInput {
-    averageScore: Int,
-    lowestScore: Int,
-    highestScore: Int,
+    averageScore: Int
+    lowestScore: Int
+    highestScore: Int
     averageTime: String
   }
   type Style {
