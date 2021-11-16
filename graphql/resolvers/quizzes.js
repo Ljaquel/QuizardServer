@@ -1,9 +1,6 @@
-const { AuthenticationError } = require('apollo-server');
-
 const ObjectId = require('mongoose').Types.ObjectId;
 const Quiz = require('../../models/Quiz');
 const checkAuth = require('../../util/check-auth');
-
 
 module.exports = {
   Query: {
