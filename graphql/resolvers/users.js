@@ -69,11 +69,12 @@ module.exports = {
         throw new UserInputError("Wrong credentials", { errors });
       }
       const token = generateToken(user);
-      return {
+      let result = {
         ...user._doc,
         ...user,
         token,
-      };
+      }
+      return result
     },
     async register(
       _,
@@ -104,18 +105,19 @@ module.exports = {
         username,
         password,
         name,
-        level: 0,
+        level: 1,
         points: 0,
         color: "black",
         createdAt: new Date().toISOString(),
       });
       const res = await newUser.save();
       const token = generateToken(res);
-      return {
+      let result = {
         ...res._doc,
         ...res,
         token,
-      };
+      }
+      return result
     },
     changePassword: async (_, { newPassword, confirmPassword }, context) => {
       const user = checkAuth(context);
