@@ -4,14 +4,13 @@ module.exports = gql`
   type User {
     _id: ID!
     email: String!
-    token: String!
     username: String!
-    createdAt: String!
+    token: String!
     name: String!
+    level: Int
     points: Int
     color: String
-    history: [Result]
-    rewards: Rewards
+    createdAt: String!
   }
   type Quiz {
     _id: ID!
@@ -33,7 +32,74 @@ module.exports = gql`
     thumbnail: String
     createdAt: String!
   }
+  type Result {
+    _id: ID!
+    userId: String!
+    quizId: String!
+    score: Int!
+    time: String!
+    badges: [String]
+    record: [Int]
+    createdAt: String!
+  }
+  type Badge {
+    image: String
+    title: String!
+    points: Int!
+    description: String
+  }
+
+  type Query {
+    getUser(userId: ID!): User
+    getUsers(name:String!): [User]
+    getQuiz(quizId: ID!): Quiz!
+    getQuizzes(filters: QuizInput): [Quiz]
+    getSearchResults(query: String!, searchFilter: String): [SearchResult]!
+    getResults(filters: ResultInput): [Result]
+    getBadge(badgeId: ID!): Badge
+  }
+  type Mutation {
+
+    register(registerInput: RegisterInput): User!
+    login(username: String!, password: String!): User!
+    changePassword(newPassword: String!, confirmPassword: String!): Boolean!
+    updateUser(fields: UserInput): User!
+
+    createQuiz(name: String!, creator: String!): Quiz!
+    deleteQuiz(quizId: ID!): Quiz!
+    updateQuiz(quizId: ID!, update: QuizInput): Quiz!
+
+    createResult(input: ResultInput): Result!
+    updateResult(resultId: ID!, update: ResultInput): Result!
+    deleteResult(resultId: ID!): Result!
+    deleteResults(filter: ResultInput): Boolean!
+  }
+
   union SearchResult = User | Quiz
+  
+  type Question {
+    question: String!
+    answer: Int!
+    choices: [String!]!
+  }
+  type Comment {
+    comment: String
+    name: String
+    createdAt: String
+  }
+  type Stats {
+    averageScore: Int
+    lowestScore: Int
+    highestScore: Int
+    averageTime: String
+  }
+  type Style {
+    color: String
+    backgroundColor: String
+    questionColor: String
+    choiceColor: String
+  }
+
   input RegisterInput {
     name:String!
     username: String!
@@ -44,30 +110,13 @@ module.exports = gql`
   input UserInput {
     _id: ID
     email: String
-    token: String
     username: String
-    createdAt: String
+    token: String
     name: String
+    level: Int
     points: Int
     color: String
-    history: [ResultInput]
-    rewards: RewardsInput
-  }
-  type Query {
-    getUser(userId: ID!): User
-    getUsers(name:String!): [User]
-    getQuizzes(filters: QuizInput): [Quiz]
-    getQuiz(quizId: ID!): Quiz!
-    getSearchResults(query: String!, searchFilter: String): [SearchResult]!
-  }
-  type Mutation {
-    register(registerInput: RegisterInput): User!
-    login(username: String!, password: String!): User!
-    changePassword(newPassword: String!, confirmPassword: String!): Boolean!
-    updateUser(fields: UserInput): User!
-    createQuiz(name: String!, creator: String!): Quiz!
-    deleteQuiz(quizId: ID!): Quiz!
-    updateQuiz(quizId: ID!, update: QuizInput): Quiz!
+    createdAt: String
   }
   input QuizInput {
     _id: ID
@@ -75,7 +124,7 @@ module.exports = gql`
     description: String
     publishedDate: String
     published: Boolean
-    creator: String
+    creator: ID
     timesPlayed: Int
     time: String
     rating: Int
@@ -89,31 +138,25 @@ module.exports = gql`
     thumbnail: String
     createdAt: String
   }
-  type Question {
-    question: String!
-    answer: Int!
-    choices: [String!]!
+  input ResultInput {
+    _id: ID
+    userId: String
+    quizId: String
+    score: Int
+    time: String
+    badges: [String]
+    record: [Int]
+    createdAt: String
   }
   input QuestionInput {
     question: String
     answer: Int
     choices: [String]
   }
-  type Comment {
-    comment: String
-    name: String
-    createdAt: String
-  }
   input CommentInput {
     comment: String
     name: String
     createdAt: String
-  }
-  type Stats {
-    averageScore: Int
-    lowestScore: Int
-    highestScore: Int
-    averageTime: String
   }
   input StatsInput {
     averageScore: Int
@@ -121,36 +164,10 @@ module.exports = gql`
     highestScore: Int
     averageTime: String
   }
-  type Style {
-    color: String
-    backgroundColor: String
-    questionColor: String
-    choiceColor: String
-  }
   input StyleInput {
     color: String
     backgroundColor: String
     questionColor: String
     choiceColor: String
-  }
-  type Result {
-    quizId: String
-    score: Int
-    time: String
-  }
-  type Rewards {
-    level: Int
-    points: Int
-    badges: [String]
-  }
-  input ResultInput {
-    quizId: String
-    score: Int
-    time: String
-  }
-  input RewardsInput {
-    level: Int
-    points: Int
-    badges: [String]
   }
 `;

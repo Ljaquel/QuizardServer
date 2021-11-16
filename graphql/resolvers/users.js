@@ -103,16 +103,11 @@ module.exports = {
         email,
         username,
         password,
-        createdAt: new Date().toISOString(),
         name,
+        level: 0,
         points: 0,
         color: "black",
-        history: [],
-        rewards: {
-          level: 0,
-          points: 0,
-          badges: [],
-        },
+        createdAt: new Date().toISOString(),
       });
       const res = await newUser.save();
       const token = generateToken(res);

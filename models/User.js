@@ -4,13 +4,11 @@ const userSchema = new Schema({
     username: String,
     password: String,
     email: String,
-    createdAt: String,
     name: String,
-    creator: Boolean,
     points: Number,
+    level: Number,
     color: String,
-    history: Array,
-    rewards: Object
+    createdAt: String,
 });
 
 module.exports = model('User', userSchema);

@@ -1,26 +1,27 @@
 const usersResolvers = require("./users");
 const quizzesResolvers = require("./quizzes");
+const globalResolvers = require("./global");
+const resultsResolvers = require("./results");
+const badgesResolvers = require("./badges");
 const User = require("../../models/User");
-const Quiz = require("../../models/Quiz");
+const Quiz = require('../../models/Quiz');
 
 module.exports = {
   SearchResult: {
-    __resolveType(obj, context, info) {
-      // Only User has a name field
-      if (obj.username) {
-        return "User";
-      }
-      // Only Quiz has a name field
-      if (obj.name) {
-        return "Quiz";
-      }
-      return null; // GraphQLError is thrown
+    __resolveType(obj) {
+      if (obj.username) return "User"
+      if (obj.name) return "Quiz"
+      return null
     },
   },
   Query: {
     ...usersResolvers.Query,
     ...quizzesResolvers.Query,
+    ...globalResolvers.Query,
+    ...resultsResolvers.Query,
+    ...badgesResolvers.Query,
     getSearchResults: async (_, { query, searchFilter }, context) => {
+      if(searchFilter === "") return []
       let results = [];
       let users = [];
       let quizzes = [];
@@ -47,12 +48,17 @@ module.exports = {
           });
           quizzes = await Quiz.find({ name: { $regex } });
           results = [...users, ...quizzes];
-      } 
+          break;
+      }
       return results;
     },
   },
   Mutation: {
     ...usersResolvers.Mutation,
     ...quizzesResolvers.Mutation,
+    ...globalResolvers.Mutation,
+    ...resultsResolvers.Mutation,
+    ...badgesResolvers.Mutation,
   },
+  ...globalResolvers.SearchResult,
 };
