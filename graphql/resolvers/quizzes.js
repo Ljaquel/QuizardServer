@@ -36,7 +36,7 @@ module.exports = {
           publishedDate: "",
           published: false,
           timesPlayed: 0,
-          time: "0",
+          time: "00:10:00",
           rating: 0,
           comments: [],
           difficulty: "easy",
