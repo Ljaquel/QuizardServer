@@ -1,6 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const Quiz = require('../../models/Quiz');
 const checkAuth = require('../../util/check-auth');
+const cloudinary = require('../../util/cloudinary');
 
 module.exports = {
   Query: {
@@ -75,6 +76,15 @@ module.exports = {
     async deleteQuiz(_, { quizId }, context) {
       checkAuth(context);
       const filter = { _id: new ObjectId(quizId) }
+      const quiz = await Quiz.findById(filter._id);
+      if(quiz.thumbnail && quiz.thumbnail !== "") {
+        const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail)
+        if(res.result !== 'ok') throw new Error
+      }
+      if(quiz.backgroundImage && quiz.backgroundImage !== "") {
+        const res = await cloudinary.v2.uploader.destroy(quiz.backgroundImage)
+        if(res.result !== 'ok') throw new Error
+      }
       const modified = await Quiz.findOneAndDelete(filter);
       return modified;
     },
@@ -83,6 +93,38 @@ module.exports = {
       const filter = { _id: new ObjectId(quizId) }
       const modified = await Quiz.findOneAndUpdate(filter, {$set: update}, { new: true });
       return modified;
+    },
+    async updateThumbnail(_, { quizId, value }, context) {
+      checkAuth(context);
+      try {
+        const filter = { _id: new ObjectId(quizId) }
+        const quiz = await Quiz.findById(filter._id);
+        if(quiz.thumbnail && quiz.thumbnail !== "") {
+          const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail)
+          if(res.result !== 'ok') throw new Error
+        }
+        await Quiz.findOneAndUpdate(filter, {$set: {thumbnail: value}}, { new: true });
+        return true;
+      }
+      catch(err) {
+        throw new Error(err);
+      }
+    },
+    async updateBackground(_, { quizId, value }, context) {
+      checkAuth(context);
+      try {
+        const filter = { _id: new ObjectId(quizId) }
+        const quiz = await Quiz.findById(filter._id);
+        if(quiz.backgroundImage && quiz.backgroundImage !== "") {
+          const res = await cloudinary.v2.uploader.destroy(quiz.backgroundImage)
+          if(res.result !== 'ok') throw new Error
+        }
+        await Quiz.findOneAndUpdate(filter, {$set: {backgroundImage: value}}, { new: true });
+        return true;
+      }
+      catch(err) {
+        throw new Error(err);
+      }
     },
   },
 };

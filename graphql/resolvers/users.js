@@ -2,25 +2,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UserInputError, AuthenticationError } = require("apollo-server");
 const ObjectId = require("mongoose").Types.ObjectId;
+const cloudinary = require('../../util/cloudinary');
 
-const {
-  validateRegisterInput,
-  validateLoginInput,
-} = require("../../util/validators");
+const { validateRegisterInput, validateLoginInput } = require("../../util/validators");
 const { SECRET_KEY } = require("../../config");
 const User = require("../../models/User");
 const checkAuth = require("../../util/check-auth");
 
 function generateToken(user) {
-  return jwt.sign(
-    {
-      _id: user._id,
-      email: user.email,
-      username: user.username,
-    },
-    SECRET_KEY,
-    { expiresIn: "1h" }
-  );
+  return jwt.sign( { _id: user._id }, SECRET_KEY, { expiresIn: "2h" } );
 }
 
 function escapeRegExp(string) {
@@ -108,6 +98,7 @@ module.exports = {
         level: 1,
         points: 0,
         color: "black",
+        avatar: "",
         createdAt: new Date().toISOString(),
       });
       const res = await newUser.save();
@@ -144,6 +135,22 @@ module.exports = {
       } catch (error) {
         console.log(error);
         throw new Error("There was an error updating the fields");
+      }
+    },
+    async updateAvatar(_, { userId, value }, context) {
+      checkAuth(context);
+      try {
+        const filter = { _id: new ObjectId(userId) }
+        const user = await User.findById(filter._id);
+        if(user.avatar && user.avatar !== "") {
+          const res = await cloudinary.v2.uploader.destroy(user.avatar)
+          if(res.result !== 'ok') throw new Error
+        }
+        await User.findOneAndUpdate(filter, {$set: {avatar: value}}, { new: true });
+        return true;
+      }
+      catch(err) {
+        throw new Error(err);
       }
     },
   },
