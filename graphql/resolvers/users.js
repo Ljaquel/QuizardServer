@@ -97,7 +97,7 @@ module.exports = {
         name,
         level: 1,
         points: 0,
-        color: "black",
+        color: "#ffffff",
         avatar: "",
         createdAt: new Date().toISOString(),
         following: [],
