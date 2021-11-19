@@ -54,7 +54,7 @@ module.exports = gql`
 
   type Query {
     getUser(userId: ID!): User
-    getUsers(name:String!): [User]
+    getUsers(name: String!): [User]
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
     getSearchResults(query: String!, searchFilter: String): [SearchResult]
@@ -62,7 +62,6 @@ module.exports = gql`
     getBadge(badgeId: ID!): Badge
   }
   type Mutation {
-
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     changePassword(newPassword: String!, confirmPassword: String!): Boolean!
@@ -80,18 +79,22 @@ module.exports = gql`
     updateResult(resultId: ID!, update: ResultInput): Result!
     deleteResult(resultId: ID!): Result!
     deleteResults(filter: ResultInput): Boolean!
+
+    createComment(quizId: ID!, user: ID!, body: String!): Quiz!
+    deleteComment(quizId: ID!, commentId: ID!): Quiz!
   }
 
   union SearchResult = User | Quiz
-  
+
   type Question {
     question: String!
     answer: Int!
     choices: [String!]!
   }
   type Comment {
-    comment: String
-    name: String
+    _id: ID
+    body: String
+    user: ID
     createdAt: String
   }
   type Stats {
@@ -108,7 +111,7 @@ module.exports = gql`
   }
 
   input RegisterInput {
-    name:String!
+    name: String!
     username: String!
     password: String!
     confirmPassword: String!
