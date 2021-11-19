@@ -10,6 +10,8 @@ const userSchema = new Schema({
     color: String,
     avatar: String,
     createdAt: String,
+    following: Array,
+    followers: Array
 });
 
 module.exports = model('User', userSchema);
