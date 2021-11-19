@@ -12,6 +12,8 @@ module.exports = gql`
     color: String
     avatar: String
     createdAt: String!
+    following: [String]
+    followers: [String]
   }
   type Quiz {
     _id: ID!
@@ -63,6 +65,7 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     changePassword(newPassword: String!, confirmPassword: String!): Boolean!
+    setFollower(creatorId: String, newFollowers: [String]): Boolean!
     updateUser(fields: UserInput): User!
     updateAvatar(userId: ID!, value: String!): Boolean!
 
@@ -125,6 +128,8 @@ module.exports = gql`
     color: String
     avatar: String
     createdAt: String
+    following: [String]
+    followers: [String]
   }
   input QuizInput {
     _id: ID
