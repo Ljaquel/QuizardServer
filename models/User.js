@@ -8,6 +8,7 @@ const userSchema = new Schema({
     points: Number,
     level: Number,
     color: String,
+    avatar: String,
     createdAt: String,
 });
 

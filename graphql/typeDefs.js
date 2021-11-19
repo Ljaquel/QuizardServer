@@ -10,6 +10,7 @@ module.exports = gql`
     level: Int
     points: Int
     color: String
+    avatar: String
     createdAt: String!
   }
   type Quiz {
@@ -64,10 +65,13 @@ module.exports = gql`
     login(username: String!, password: String!): User!
     changePassword(newPassword: String!, confirmPassword: String!): Boolean!
     updateUser(fields: UserInput): User!
+    updateAvatar(userId: ID!, value: String!): Boolean!
 
     createQuiz(name: String!, creator: String!): Quiz!
     deleteQuiz(quizId: ID!): Quiz!
     updateQuiz(quizId: ID!, update: QuizInput): Quiz!
+    updateThumbnail(quizId: ID!, value: String!): Boolean!
+    updateBackground(quizId: ID!, value: String!): Boolean!
 
     createResult(input: ResultInput): Result!
     updateResult(resultId: ID!, update: ResultInput): Result!
@@ -116,6 +120,7 @@ module.exports = gql`
     level: Int
     points: Int
     color: String
+    avatar: String
     createdAt: String
   }
   input QuizInput {
