@@ -109,6 +109,8 @@ module.exports = {
         points: 0,
         color: "black",
         createdAt: new Date().toISOString(),
+        following: [],
+        followers: [],
       });
       const res = await newUser.save();
       const token = generateToken(res);
@@ -133,17 +135,30 @@ module.exports = {
         return false;
       }
     },
-    updateUser: async (_, { fields }, context) => {
+    updateUser: async (_, { fields }, context) => { 
       const user = checkAuth(context);
       const _id = new ObjectId(user._id);
       try {
-        if (!user) throw new AuthenticationError("You are not authenticated");
+        if (!user) throw new AuthenticationError("You are not authenticated"); 
         const updatedUser = await User.findOneAndUpdate( { _id }, {$set: fields}, { new: true, returnOriginal: false });
         const token = generateToken(updatedUser);
         return { ...updatedUser._doc, _id: updatedUser._id, token };
       } catch (error) {
         console.log(error);
         throw new Error("There was an error updating the fields");
+      }
+    },
+    setFollower: async (_, {creatorId, newFollowers }, context) => {
+      console.log("Starting here")
+      const user = checkAuth(context);
+      try {
+        if (!user) return false;  
+        await User.findByIdAndUpdate(creatorId, { followers: newFollowers });
+        return true;
+        
+      } catch (err) {
+        console.log(err);
+        return false;
       }
     },
   },
