@@ -15,6 +15,18 @@ module.exports = gql`
     following: [String]
     followers: [String]
   }
+  type Platform {
+    _id: ID!
+    name: String!
+    description: String!
+    creator: User
+    rating: Int!
+    image: Image
+    banner: Image
+    followers: [String]
+    following: [String]
+    createdAt: String!
+  }
   type Quiz {
     _id: ID!
     name: String!
@@ -22,6 +34,7 @@ module.exports = gql`
     publishedDate: String
     published: Boolean!
     creator: User
+    platform: Platform
     timesPlayed: Int!
     time: String
     rating: Int!
@@ -60,6 +73,8 @@ module.exports = gql`
     getSearchResults(query: String!, searchFilter: String): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
+    getPlatform(platformId: ID!): Platform!
+    getPlatforms(filters: PlatformInput): [Platform]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
@@ -68,9 +83,13 @@ module.exports = gql`
     setFollower(creatorId: String, newFollowers: [String]): Boolean!
     updateUser(fields: UserInput): User!
 
-    createQuiz(name: String!, creatorId: String!): Boolean!
+    createQuiz(name: String!, creatorId: String!, platformId: String!): Boolean!
     deleteQuiz(quizId: ID!): Boolean!
     updateQuiz(quizId: ID!, update: QuizInput): Boolean!
+
+    createPlatform(name: String!, creatorId: String!): Boolean!
+    deletePlatform(platformId: ID!): Boolean!
+    updatePlatform(platformId: ID!, update: PlatformInput): Boolean!
 
     createResult(input: ResultInput): Result!
     updateResult(resultId: ID!, update: ResultInput): Result!
@@ -79,11 +98,11 @@ module.exports = gql`
 
     createComment(quizId: ID!, user: ID!, body: String!): Boolean!
     deleteComment(quizId: ID!, commentId: ID!): Boolean!
-    
+
     updateImage(type: String, _id: ID!, field: String, publicId: String, url: String): Boolean!
   }
 
-  union SearchResult = User | Quiz
+  union SearchResult = User | Quiz | Platform
 
   type Question {
     question: String!
@@ -146,6 +165,7 @@ module.exports = gql`
     publishedDate: String
     published: Boolean
     creator: ID
+    platform: ID
     timesPlayed: Int
     time: String
     rating: Int
@@ -190,5 +210,17 @@ module.exports = gql`
     backgroundColor: String
     questionColor: String
     choiceColor: String
+  }
+  input PlatformInput {
+    _id: ID
+    name: String
+    description: String
+    creator: ID
+    rating: Int
+    image: ImageInput
+    banner: ImageInput
+    followers: [String]
+    following: [String]
+    createdAt: String
   }
 `;

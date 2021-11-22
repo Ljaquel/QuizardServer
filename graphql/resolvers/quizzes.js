@@ -4,6 +4,7 @@ const checkAuth = require("../../util/check-auth");
 const cloudinary = require("../../util/cloudinary");
 
 const userFieldsToPopulate = '_id name username'
+const platformFieldsToPopulate = '_id name'
 
 module.exports = {
   Query: {
@@ -11,6 +12,7 @@ module.exports = {
       try {
         const quizzes = await Quiz.find(filters)
           .populate({ path: 'creator', select: userFieldsToPopulate })
+          .populate({ path: 'platform', select: platformFieldsToPopulate })
           .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }})
           .sort({ createdAt: -1 });
         return quizzes;
@@ -22,6 +24,7 @@ module.exports = {
       try {
         const quiz = await Quiz.findById(quizId)
           .populate({ path: 'creator', select: userFieldsToPopulate })
+          .populate({ path: 'platform', select: platformFieldsToPopulate })
           .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
         if (quiz) { return quiz } 
         else { throw new Error("Quiz not found") }
@@ -31,13 +34,14 @@ module.exports = {
     },
   },
   Mutation: {
-    async createQuiz(_, { name, creatorId }, context) {
+    async createQuiz(_, { name, creatorId, platformId }, context) {
       try {
         checkAuth(context);
         const newQuiz = new Quiz({
           name,
           description: "Provide description here",
           creator: creatorId,
+          platform: platformId,
           publishedDate: "",
           published: false,
           timesPlayed: 0,

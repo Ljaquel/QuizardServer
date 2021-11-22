@@ -7,6 +7,7 @@ const quizSchema = new Schema({
   publishedDate: String,
   published: Boolean,
   creator: { type: ObjectId, ref: "User" },
+  platform: { type: ObjectId, ref: "Platform" },
   timesPlayed: Number,
   time: String,
   rating: Number,
