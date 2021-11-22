@@ -65,11 +65,17 @@ module.exports = {
               choices: ["Answer A", "Answer B", "Answer C", "Answer D"],
             },
           ],
-          backgroundImage: "",
-          thumbnail: "",
+          backgroundImage: {
+            publicId: "",
+            url: ""
+          },
+          thumbnail: {
+            publicId: "",
+            url: ""
+          },
           createdAt: new Date().toISOString(),
         });
-        const quiz = await newQuiz.save();
+        await newQuiz.save();
         return true;
       } catch (err) {
         console.log(err);
@@ -106,12 +112,12 @@ module.exports = {
       try {
         const filter = { _id: new ObjectId(quizId) };
         const quiz = await Quiz.findById(filter._id);
-        if (quiz.thumbnail && quiz.thumbnail !== "") {
-          const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail);
+        if (quiz.thumbnail?.publicId && quiz.thumbnail.publicId !== "") {
+          const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail.publicId);
           if (res.result !== "ok") throw new Error();
         }
-        if (quiz.backgroundImage && quiz.backgroundImage !== "") {
-          const res = await cloudinary.v2.uploader.destroy(quiz.backgroundImage);
+        if (quiz.backgroundImage?.publicId && quiz.backgroundImage.publicId !== "") {
+          const res = await cloudinary.v2.uploader.destroy(quiz.backgroundImage.publicId);
           if (res.result !== "ok") throw new Error();
         }
         await Quiz.findOneAndDelete(filter);
@@ -125,55 +131,11 @@ module.exports = {
       checkAuth(context);
       try {
         const filter = { _id: new ObjectId(quizId) };
-        const modified = await Quiz.findOneAndUpdate(
-          filter,
-          { $set: update },
-          { new: true }
-        );
+        await Quiz.findOneAndUpdate( filter, { $set: update }, { new: true });
         return true;
       }
       catch(err) {
         throw new Error(err) 
-      }
-    },
-    async updateThumbnail(_, { quizId, value }, context) {
-      checkAuth(context);
-      try {
-        const filter = { _id: new ObjectId(quizId) };
-        const quiz = await Quiz.findById(filter._id);
-        if (quiz.thumbnail && quiz.thumbnail !== "") {
-          const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail);
-          if (res.result !== "ok") throw new Error();
-        }
-        await Quiz.findOneAndUpdate(
-          filter,
-          { $set: { thumbnail: value } },
-          { new: true }
-        );
-        return true;
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    async updateBackground(_, { quizId, value }, context) {
-      checkAuth(context);
-      try {
-        const filter = { _id: new ObjectId(quizId) };
-        const quiz = await Quiz.findById(filter._id);
-        if (quiz.backgroundImage && quiz.backgroundImage !== "") {
-          const res = await cloudinary.v2.uploader.destroy(
-            quiz.backgroundImage
-          );
-          if (res.result !== "ok") throw new Error();
-        }
-        await Quiz.findOneAndUpdate(
-          filter,
-          { $set: { backgroundImage: value } },
-          { new: true }
-        );
-        return true;
-      } catch (err) {
-        throw new Error(err);
       }
     },
   },

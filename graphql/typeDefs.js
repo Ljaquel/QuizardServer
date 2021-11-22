@@ -10,7 +10,7 @@ module.exports = gql`
     level: Int
     points: Int
     color: String
-    avatar: String
+    avatar: Image
     createdAt: String!
     following: [String]
     followers: [String]
@@ -31,8 +31,8 @@ module.exports = gql`
     tags: [String]
     stats: Stats
     content: [Question]!
-    backgroundImage: String
-    thumbnail: String
+    backgroundImage: Image
+    thumbnail: Image
     createdAt: String!
   }
   type Result {
@@ -67,13 +67,10 @@ module.exports = gql`
     changePassword(newPassword: String!, confirmPassword: String!): Boolean!
     setFollower(creatorId: String, newFollowers: [String]): Boolean!
     updateUser(fields: UserInput): User!
-    updateAvatar(userId: ID!, value: String!): Boolean!
 
     createQuiz(name: String!, creatorId: String!): Boolean!
     deleteQuiz(quizId: ID!): Boolean!
     updateQuiz(quizId: ID!, update: QuizInput): Boolean!
-    updateThumbnail(quizId: ID!, value: String!): Boolean!
-    updateBackground(quizId: ID!, value: String!): Boolean!
 
     createResult(input: ResultInput): Result!
     updateResult(resultId: ID!, update: ResultInput): Result!
@@ -82,6 +79,8 @@ module.exports = gql`
 
     createComment(quizId: ID!, user: ID!, body: String!): Boolean!
     deleteComment(quizId: ID!, commentId: ID!): Boolean!
+    
+    updateImage(type: String, _id: ID!, field: String, publicId: String, url: String): Boolean!
   }
 
   union SearchResult = User | Quiz
@@ -109,7 +108,16 @@ module.exports = gql`
     questionColor: String
     choiceColor: String
   }
+  type Image {
+    publicId: String
+    url: String
+  }
 
+
+  input ImageInput {
+    publicId: String
+    url: String
+  }
   input RegisterInput {
     name: String!
     username: String!
@@ -126,7 +134,7 @@ module.exports = gql`
     level: Int
     points: Int
     color: String
-    avatar: String
+    avatar: ImageInput
     createdAt: String
     following: [String]
     followers: [String]
@@ -147,8 +155,8 @@ module.exports = gql`
     tags: [String]
     stats: StatsInput
     content: [QuestionInput]
-    backgroundImage: String
-    thumbnail: String
+    backgroundImage: ImageInput
+    thumbnail: ImageInput
     createdAt: String
   }
   input ResultInput {

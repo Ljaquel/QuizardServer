@@ -22,8 +22,8 @@ const quizSchema = new Schema({
   tags: Array,
   stats: Object,
   content: Array,
-  backgroundImage: String,
-  thumbnail: String,
+  backgroundImage: Object,
+  thumbnail: Object,
   createdAt: String,
 });
 
