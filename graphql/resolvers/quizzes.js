@@ -3,16 +3,16 @@ const Quiz = require("../../models/Quiz");
 const checkAuth = require("../../util/check-auth");
 const cloudinary = require("../../util/cloudinary");
 
+const userFieldsToPopulate = '_id name username'
+
 module.exports = {
-  Quiz: {
-    comments: async (quiz) => {
-      return (await quiz.populate("comments").execPopulate()).comments;
-    },
-  },
   Query: {
     async getQuizzes(_, { filters }) {
       try {
-        const quizzes = await Quiz.find(filters).sort({ createdAt: -1 });
+        const quizzes = await Quiz.find(filters)
+          .populate({ path: 'creator', select: userFieldsToPopulate })
+          .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }})
+          .sort({ createdAt: -1 });
         return quizzes;
       } catch (err) {
         throw new Error(err);
@@ -20,25 +20,24 @@ module.exports = {
     },
     async getQuiz(_, { quizId }) {
       try {
-        const quiz = await Quiz.findById(quizId);
-        if (quiz) {
-          return quiz;
-        } else {
-          throw new Error("Quiz not found");
-        }
+        const quiz = await Quiz.findById(quizId)
+          .populate({ path: 'creator', select: userFieldsToPopulate })
+          .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
+        if (quiz) { return quiz } 
+        else { throw new Error("Quiz not found") }
       } catch (err) {
         throw new Error(err);
       }
     },
   },
   Mutation: {
-    async createQuiz(_, { name, creator }, context) {
+    async createQuiz(_, { name, creatorId }, context) {
       try {
         checkAuth(context);
         const newQuiz = new Quiz({
           name,
           description: "Provide description here",
-          creator,
+          creator: creatorId,
           publishedDate: "",
           published: false,
           timesPlayed: 0,
@@ -71,7 +70,7 @@ module.exports = {
           createdAt: new Date().toISOString(),
         });
         const quiz = await newQuiz.save();
-        return quiz;
+        return true;
       } catch (err) {
         console.log(err);
         console.log(JSON.stringify(err, null, 2));
@@ -79,45 +78,63 @@ module.exports = {
       }
     },
     async createComment(_, { quizId, user, body }, context) {
-      const quiz = await Quiz.findById(quizId);
-      console.log(quiz);
-      const comment = { user, body, createdAt: new Date().toISOString() };
-      // await comment.save();
-      await quiz.comments.unshift(comment);
-      const savedQuiz = await quiz.save();
-      return savedQuiz;
+      try {
+        const quiz = await Quiz.findById(quizId);
+        console.log(quiz);
+        const comment = { user, body, createdAt: new Date().toISOString() };
+        await quiz.comments.unshift(comment);
+        await quiz.save();
+        return true;
+      }
+      catch(err) {
+        throw new Error(err)
+      }
     },
     async deleteComment(_, { quizId, commentId }, context) {
-      const quiz = await Quiz.findById(quizId);
-      // const commentIndex = quiz.comments.findIndex((c) => c._id === commentId);
-      await quiz.comments.id(commentId).remove();
-      const savedQuiz = await quiz.save();
-      return savedQuiz;
+      try {
+        const quiz = await Quiz.findById(quizId);
+        await quiz.comments.id(commentId).remove();
+        await quiz.save();
+        return true;
+      }
+      catch(err) {
+        throw new Error(err)
+      }
     },
     async deleteQuiz(_, { quizId }, context) {
       checkAuth(context);
-      const filter = { _id: new ObjectId(quizId) };
-      const quiz = await Quiz.findById(filter._id);
-      if (quiz.thumbnail && quiz.thumbnail !== "") {
-        const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail);
-        if (res.result !== "ok") throw new Error();
+      try {
+        const filter = { _id: new ObjectId(quizId) };
+        const quiz = await Quiz.findById(filter._id);
+        if (quiz.thumbnail && quiz.thumbnail !== "") {
+          const res = await cloudinary.v2.uploader.destroy(quiz.thumbnail);
+          if (res.result !== "ok") throw new Error();
+        }
+        if (quiz.backgroundImage && quiz.backgroundImage !== "") {
+          const res = await cloudinary.v2.uploader.destroy(quiz.backgroundImage);
+          if (res.result !== "ok") throw new Error();
+        }
+        await Quiz.findOneAndDelete(filter);
+        return true;
       }
-      if (quiz.backgroundImage && quiz.backgroundImage !== "") {
-        const res = await cloudinary.v2.uploader.destroy(quiz.backgroundImage);
-        if (res.result !== "ok") throw new Error();
+      catch(err) {
+        throw new Error(err)
       }
-      const modified = await Quiz.findOneAndDelete(filter);
-      return modified;
     },
     async updateQuiz(_, { quizId, update }, context) {
       checkAuth(context);
-      const filter = { _id: new ObjectId(quizId) };
-      const modified = await Quiz.findOneAndUpdate(
-        filter,
-        { $set: update },
-        { new: true }
-      );
-      return modified;
+      try {
+        const filter = { _id: new ObjectId(quizId) };
+        const modified = await Quiz.findOneAndUpdate(
+          filter,
+          { $set: update },
+          { new: true }
+        );
+        return true;
+      }
+      catch(err) {
+        throw new Error(err) 
+      }
     },
     async updateThumbnail(_, { quizId, value }, context) {
       checkAuth(context);

@@ -21,7 +21,7 @@ module.exports = gql`
     description: String!
     publishedDate: String
     published: Boolean!
-    creator: ID!
+    creator: User
     timesPlayed: Int!
     time: String
     rating: Int!
@@ -69,9 +69,9 @@ module.exports = gql`
     updateUser(fields: UserInput): User!
     updateAvatar(userId: ID!, value: String!): Boolean!
 
-    createQuiz(name: String!, creator: String!): Quiz!
-    deleteQuiz(quizId: ID!): Quiz!
-    updateQuiz(quizId: ID!, update: QuizInput): Quiz!
+    createQuiz(name: String!, creatorId: String!): Boolean!
+    deleteQuiz(quizId: ID!): Boolean!
+    updateQuiz(quizId: ID!, update: QuizInput): Boolean!
     updateThumbnail(quizId: ID!, value: String!): Boolean!
     updateBackground(quizId: ID!, value: String!): Boolean!
 
@@ -80,8 +80,8 @@ module.exports = gql`
     deleteResult(resultId: ID!): Result!
     deleteResults(filter: ResultInput): Boolean!
 
-    createComment(quizId: ID!, user: ID!, body: String!): Quiz!
-    deleteComment(quizId: ID!, commentId: ID!): Quiz!
+    createComment(quizId: ID!, user: ID!, body: String!): Boolean!
+    deleteComment(quizId: ID!, commentId: ID!): Boolean!
   }
 
   union SearchResult = User | Quiz
@@ -94,7 +94,7 @@ module.exports = gql`
   type Comment {
     _id: ID
     body: String
-    user: ID
+    user: User
     createdAt: String
   }
   type Stats {
@@ -167,8 +167,8 @@ module.exports = gql`
     choices: [String]
   }
   input CommentInput {
-    comment: String
-    name: String
+    body: String
+    user: String
     createdAt: String
   }
   input StatsInput {

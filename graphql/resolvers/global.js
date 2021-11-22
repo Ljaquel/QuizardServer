@@ -5,6 +5,8 @@ const Quiz = require('../../models/Quiz');
 //const Badge = require('../../models/Badge');
 const checkAuth = require('../../util/check-auth');
 
+const userFieldsToPopulate = '_id name username'
+
 module.exports = {
   SearchResult: {
     __resolveType(obj) {
@@ -28,7 +30,9 @@ module.exports = {
           results = users;
           break;
         case "Quiz":
-          quizzes = await Quiz.find({ name: { $regex }, published: true });
+          quizzes = await Quiz.find({ name: { $regex }, published: true })
+            .populate({ path: 'creator', select: userFieldsToPopulate })
+            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
           results = quizzes;
           break;
         case "Tag":
