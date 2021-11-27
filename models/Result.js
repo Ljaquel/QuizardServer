@@ -10,6 +10,7 @@ const resultSchema = new Schema({
   last: Number,
   rating: Number,
   lastRecord: Array,
+  modifiedAt: String,
   createdAt: String
 });
 

@@ -30,6 +30,7 @@ module.exports = {
         const newResult = new Result({
           ...input,
           rating: -1,
+          modifiedAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
         })
         const result = await newResult.save();
@@ -49,7 +50,7 @@ module.exports = {
     async updateResult(_, { resultId, update }, context) {
       checkAuth(context);
       const filter = { _id: new ObjectId(resultId) }
-      const modified = await Result.findOneAndUpdate(filter, {$set: {...update, createdAt: new Date().toISOString()}}, { new: true });
+      const modified = await Result.findOneAndUpdate(filter, {$set: {...update, modifiedAt: new Date().toISOString()}}, { new: true });
       return modified;
     },
     async deleteResults(_, { filter }, context) {

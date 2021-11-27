@@ -61,6 +61,7 @@ module.exports = gql`
     last: Int
     lastRecord: [Int]
     rating: Float
+    modifiedAt: String!
     createdAt: String!
   }
   type Badge {
@@ -195,6 +196,7 @@ module.exports = gql`
     last: Int
     lastRecord: [Int]
     rating: Float
+    modifiedAt: String
     createdAt: String
   }
   input QuestionInput {
