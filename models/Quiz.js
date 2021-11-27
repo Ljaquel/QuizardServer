@@ -11,6 +11,7 @@ const quizSchema = new Schema({
   timesPlayed: Number,
   time: String,
   rating: Number,
+  ratingCount: Number,
   comments: [
     {
       body: String,

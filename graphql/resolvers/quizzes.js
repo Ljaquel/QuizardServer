@@ -46,7 +46,8 @@ module.exports = {
           published: false,
           timesPlayed: 0,
           time: "00:10:00",
-          rating: 0,
+          rating: 0.0,
+          ratingCount: 0,
           comments: [],
           difficulty: "easy",
           style: {

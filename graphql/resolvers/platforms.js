@@ -46,7 +46,8 @@ module.exports = {
           },
           followers: [],
           following: [],
-          rating: 0,
+          rating: 0.0,
+          ratingCount: 0,
           createdAt: new Date().toISOString(),
         });
         await newPlatform.save();

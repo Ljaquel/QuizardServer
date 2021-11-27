@@ -29,6 +29,7 @@ module.exports = {
 
         const newResult = new Result({
           ...input,
+          rating: -1,
           createdAt: new Date().toISOString(),
         })
         const result = await newResult.save();

@@ -8,6 +8,7 @@ const platformSchema = new Schema({
   image: Object,
   banner: Object,
   rating: Number,
+  ratingCount: Number,
   followers: Array,
   following: Array,
   createdAt: String,

@@ -20,7 +20,8 @@ module.exports = gql`
     name: String!
     description: String!
     creator: User
-    rating: Int!
+    rating: Float!
+    ratingCount: Int!
     image: Image
     banner: Image
     followers: [String]
@@ -37,7 +38,8 @@ module.exports = gql`
     platform: Platform
     timesPlayed: Int!
     time: String
-    rating: Int!
+    rating: Float!
+    ratingCount: Int!
     comments: [Comment]!
     difficulty: String!
     style: Style
@@ -58,6 +60,7 @@ module.exports = gql`
     record: [Int]
     last: Int
     lastRecord: [Int]
+    rating: Float
     createdAt: String!
   }
   type Badge {
@@ -170,7 +173,8 @@ module.exports = gql`
     platform: ID
     timesPlayed: Int
     time: String
-    rating: Int
+    rating: Float
+    ratingCount: Int
     comments: [CommentInput]
     difficulty: String
     style: StyleInput
@@ -191,6 +195,7 @@ module.exports = gql`
     record: [Int]
     last: Int
     lastRecord: [Int]
+    rating: Float
     createdAt: String
   }
   input QuestionInput {
@@ -220,7 +225,8 @@ module.exports = gql`
     name: String
     description: String
     creator: ID
-    rating: Int
+    rating: Float
+    ratingCount: Int
     image: ImageInput
     banner: ImageInput
     followers: [String]

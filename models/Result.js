@@ -8,6 +8,7 @@ const resultSchema = new Schema({
   badges: Array,
   record: Array,
   last: Number,
+  rating: Number,
   lastRecord: Array,
   createdAt: String
 });
