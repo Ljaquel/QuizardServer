@@ -56,6 +56,8 @@ module.exports = gql`
     time: String!
     badges: [String]
     record: [Int]
+    last: Int
+    lastRecord: [Int]
     createdAt: String!
   }
   type Badge {
@@ -187,6 +189,8 @@ module.exports = gql`
     time: String
     badges: [String]
     record: [Int]
+    last: Int
+    lastRecord: [Int]
     createdAt: String
   }
   input QuestionInput {

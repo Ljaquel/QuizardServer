@@ -7,6 +7,8 @@ const resultSchema = new Schema({
   time: String,
   badges: Array,
   record: Array,
+  last: Number,
+  lastRecord: Array,
   createdAt: String
 });
 
