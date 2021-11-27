@@ -85,8 +85,7 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     changePassword(newPassword: String!, confirmPassword: String!): Boolean!
-    setFollower(creatorId: String, newFollowers: [String]): Boolean!
-    updateUser(fields: UserInput): User!
+    updateUser(userId: ID!, update: UserInput): Boolean!
 
     createQuiz(name: String!, creatorId: String!, platformId: String!): Boolean!
     deleteQuiz(quizId: ID!): Boolean!
