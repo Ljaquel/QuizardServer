@@ -24,6 +24,7 @@ module.exports = gql`
     ratingCount: Int!
     image: Image
     banner: Image
+    bannerColor: String
     followers: [String]
     following: [String]
     createdAt: String!
@@ -230,6 +231,7 @@ module.exports = gql`
     ratingCount: Int
     image: ImageInput
     banner: ImageInput
+    bannerColor: String
     followers: [String]
     following: [String]
     createdAt: String

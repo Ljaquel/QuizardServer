@@ -7,6 +7,7 @@ const platformSchema = new Schema({
   creator: { type: ObjectId, ref: "User" },
   image: Object,
   banner: Object,
+  bannerColor: String,
   rating: Number,
   ratingCount: Number,
   followers: Array,

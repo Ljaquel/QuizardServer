@@ -44,6 +44,7 @@ module.exports = {
             publicId: "",
             url: ""
           },
+          bannerColor: "#ffffff",
           followers: [],
           following: [],
           rating: 0.0,
