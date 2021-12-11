@@ -47,8 +47,10 @@ module.exports = {
           results = platforms;
           break;
         case "Tag":
-          quizzes = await Quiz.find({
-            tags: { $elemMatch: { $regex } }, published: true });
+          quizzes = await Quiz.find({ tags: { $elemMatch: { $regex } }, published: true })
+            .populate({ path: 'creator', select: userFieldsToPopulate })
+            .populate({ path: 'platform', select: platformFieldsToPopulate })
+            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
           results = quizzes;
           break;
         default:
