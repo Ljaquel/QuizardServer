@@ -1,6 +1,8 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const Result = require('../../models/Result');
+const Quiz = require('../../models/Quiz')
 const checkAuth = require('../../util/check-auth');
+const { getLevel } = require('../../util/level')
 
 module.exports = {
   Query: {
@@ -25,8 +27,7 @@ module.exports = {
   Mutation: {
     async createResult(_, { input }, context) {
       try {
-        checkAuth(context);
-
+        // const user = checkAuth(context);
         const newResult = new Result({
           ...input,
           rating: -1,
@@ -34,8 +35,13 @@ module.exports = {
           createdAt: new Date().toISOString(),
         })
         const result = await newResult.save();
+        const quiz = await Quiz.findById(result.quizId)
+        const user = await User.findById(result.userId)
+        user?.points += quiz?.points
+        const newLevel = getLevel(user?.level, user?.points)
+        user.level = newLevel;
+        await user.save()
         return result;
-
       } catch (err) {
         console.log(JSON.stringify(err, null, 2));
         throw new Error(err);
