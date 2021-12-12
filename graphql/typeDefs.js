@@ -81,7 +81,7 @@ module.exports = gql`
     getUsers(name: String!): [User]
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
-    getSearchResults(query: String!, searchFilter: String): [SearchResult]
+    getSearchResults(query: String!, searchFilter: String, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
     getPlatform(platformId: ID!): Platform!
@@ -113,6 +113,13 @@ module.exports = gql`
   }
 
   union SearchResult = User | Quiz | Platform
+
+  input SearchResultFilter {
+    category: String
+    difficulty: String
+    level: Int
+    time: String
+  }
 
   type Question {
     question: String!
