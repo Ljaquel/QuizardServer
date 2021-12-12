@@ -30,6 +30,7 @@ module.exports = {
         const newResult = new Result({
           ...input,
           rating: -1,
+          bestAttemptAt: new Date().toISOString(),
           modifiedAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
         })
@@ -50,7 +51,9 @@ module.exports = {
     async updateResult(_, { resultId, update }, context) {
       checkAuth(context);
       const filter = { _id: new ObjectId(resultId) }
-      const modified = await Result.findOneAndUpdate(filter, {$set: {...update, modifiedAt: new Date().toISOString()}}, { new: true });
+      let updates = {...update, modifiedAt: new Date().toISOString()}
+      if(update?.score) updates = {...updates, bestAttemptAt: updates.modifiedAt}
+      const modified = await Result.findOneAndUpdate(filter, {$set: updates}, { new: true });
       return modified;
     },
     async deleteResults(_, { filter }, context) {

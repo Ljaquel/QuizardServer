@@ -38,6 +38,7 @@ module.exports = gql`
     creator: User
     platform: Platform
     timesPlayed: Int!
+    usersThatPlayed: Int
     time: String
     rating: Float!
     ratingCount: Int!
@@ -45,6 +46,7 @@ module.exports = gql`
     difficulty: String!
     style: Style
     tags: [String]
+    category: String
     stats: Stats
     content: [Question]!
     backgroundImage: Image
@@ -57,11 +59,14 @@ module.exports = gql`
     quizId: String!
     score: Int!
     time: String!
+    timesTaken: Int
     badges: [String]
     record: [Int]
     last: Int
+    lastTime: String
     lastRecord: [Int]
     rating: Float
+    bestAttemptAt: String!
     modifiedAt: String!
     createdAt: String!
   }
@@ -71,7 +76,6 @@ module.exports = gql`
     points: Int!
     description: String
   }
-
   type Query {
     getUser(userId: ID!): User
     getUsers(name: String!): [User]
@@ -175,6 +179,8 @@ module.exports = gql`
     timesPlayed: Int
     time: String
     rating: Float
+    usersThatPlayed: Int
+    category: String
     ratingCount: Int
     comments: [CommentInput]
     difficulty: String
@@ -194,9 +200,12 @@ module.exports = gql`
     time: String
     badges: [String]
     record: [Int]
+    timesTaken: Int
     last: Int
+    lastTime: String
     lastRecord: [Int]
     rating: Float
+    bestAttemptAt: String
     modifiedAt: String
     createdAt: String
   }

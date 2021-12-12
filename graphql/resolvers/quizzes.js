@@ -45,11 +45,12 @@ module.exports = {
           publishedDate: "",
           published: false,
           timesPlayed: 0,
+          usersThatPlayed: 0,
           time: "00:10:00",
           rating: 0.0,
           ratingCount: 0,
           comments: [],
-          difficulty: "easy",
+          difficulty: "Easy",
           style: {
             color: "#FFFFFF",
             questionColor: "#475047",
@@ -57,6 +58,7 @@ module.exports = {
             choiceColor: "#475047",
           },
           tags: [],
+          category: 'Other',
           stats: {
             averageScore: null,
             lowestScore: null,
