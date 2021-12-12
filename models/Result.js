@@ -5,11 +5,14 @@ const resultSchema = new Schema({
   quizId: String,
   score: Number,
   time: String,
+  timesTaken: Number,
   badges: Array,
   record: Array,
-  last: Number,
   rating: Number,
+  last: Number,
+  lastTime: String,
   lastRecord: Array,
+  bestAttemptAt: String,
   modifiedAt: String,
   createdAt: String
 });

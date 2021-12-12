@@ -41,6 +41,13 @@ module.exports = {
             .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
           results = quizzes;
           break;
+        case "Category":
+          quizzes = await Quiz.find({ category: { $regex }, published: true })
+            .populate({ path: 'creator', select: userFieldsToPopulate })
+            .populate({ path: 'platform', select: platformFieldsToPopulate })
+            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
+          results = quizzes;
+          break;
         case "Platform":
           platforms = await Platform.find({ name: { $regex }})
             .populate({ path: 'creator', select: userFieldsToPopulate });
