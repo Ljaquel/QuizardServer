@@ -81,7 +81,7 @@ module.exports = gql`
     getUsers(name: String!): [User]
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
-    getSearchResults(query: String!, searchFilter: String, filter: SearchResultFilter): [SearchResult]
+    getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
     getPlatform(platformId: ID!): Platform!
@@ -119,6 +119,13 @@ module.exports = gql`
     difficulty: String
     level: Int
     time: String
+  }
+
+  input SortingInput {
+    quiz: String
+    platform: String
+    user: String
+    dir: Int
   }
 
   type Question {
