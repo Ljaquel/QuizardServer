@@ -106,13 +106,11 @@ module.exports = gql`
     createComment(quizId: ID!, user: ID!, body: String!): Boolean!
     deleteComment(quizId: ID!, commentId: ID!): Boolean!
 
-    updateImage(
-      type: String
-      _id: ID!
-      field: String
-      publicId: String
-      url: String
-    ): Boolean!
+    updateImage(type: String, _id: ID!, field: String, publicId: String, url: String): Boolean!
+
+    createBadge(badgeInput: BadgeInput!): Badge!
+    updateBadge(badgeId: ID!, badgeInput: BadgeInput!): Badge!
+    deleteBadge(badgeId: ID!): Boolean!
   }
 
   union SearchResult = User | Quiz | Platform
@@ -145,6 +143,14 @@ module.exports = gql`
     url: String
   }
 
+  input BadgeInput {
+    badgeType: String!
+    resultId: ID!
+    title: String!
+    description: String!
+    points: Int!
+    createdAt: String
+  }
   input ImageInput {
     publicId: String
     url: String
