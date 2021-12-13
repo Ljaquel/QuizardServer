@@ -81,6 +81,7 @@ module.exports = gql`
     getUsers(name: String!): [User]
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
+    getQuizStats(quizId: ID!): Stats
     getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge

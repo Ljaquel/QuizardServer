@@ -51,8 +51,9 @@ module.exports = {
     async updateResult(_, { resultId, update }, context) {
       checkAuth(context);
       const filter = { _id: new ObjectId(resultId) }
-      let updates = {...update, modifiedAt: new Date().toISOString()}
-      if(update?.score) updates = {...updates, bestAttemptAt: updates.modifiedAt}
+      let updates = {...update}
+      if (update.rating === undefined) updates = {...updates, modifiedAt: new Date().toISOString()}
+      if(update.score) updates = {...updates, bestAttemptAt: new Date().toISOString()}
       const modified = await Result.findOneAndUpdate(filter, {$set: updates}, { new: true });
       return modified;
     },
