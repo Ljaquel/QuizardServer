@@ -1,10 +1,21 @@
-const { model, Schema } = require('mongoose');
+const { model, Schema } = require("mongoose");
 
 const badgeSchema = new Schema({
-  image: String,
+  badgeType: {
+    type: String,
+    enum: ["Gold", "Silver", "Bronze"]
+  },
   title: String,
   points: Number,
-  description: String
+  description: String,
+  createdAt: {
+    type: String,
+    default: new Date().toISOString()
+  },
+  modifiedAt: {
+    type: String,
+    default: new Date().toISOString()
+  }
 });
 
-module.exports = model('Badge', badgeSchema);
+module.exports = model("Badge", badgeSchema);
