@@ -2,7 +2,7 @@ const between = (num, start, end) => {
   return num >= start && num < end;
 };
 
-export const getLevel = (currentLevel, points) => {
+const getLevel = (currentLevel, points) => {
   const level = between(points, 0, 100)
     ? 1
     : between(points, 100, 200)
@@ -26,3 +26,5 @@ export const getLevel = (currentLevel, points) => {
     : currentLevel;
   return level;
 };
+
+module.exports = { getLevel };

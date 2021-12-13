@@ -1,7 +1,10 @@
 const { model, Schema } = require('mongoose');
 
 const badgeSchema = new Schema({
-  image: String,
+  badgeType: {
+    type: String,
+    enum: ['Gold', 'Silver', 'Bronze']
+  },
   title: String,
   points: Number,
   description: String

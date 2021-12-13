@@ -27,7 +27,7 @@ module.exports = {
   Mutation: {
     async createResult(_, { input }, context) {
       try {
-        // const user = checkAuth(context);
+        checkAuth(context);
         const newResult = new Result({
           ...input,
           rating: -1,
@@ -35,12 +35,6 @@ module.exports = {
           createdAt: new Date().toISOString(),
         })
         const result = await newResult.save();
-        const quiz = await Quiz.findById(result.quizId)
-        const user = await User.findById(result.userId)
-        user?.points += quiz?.points
-        const newLevel = getLevel(user?.level, user?.points)
-        user.level = newLevel;
-        await user.save()
         return result;
       } catch (err) {
         console.log(JSON.stringify(err, null, 2));
