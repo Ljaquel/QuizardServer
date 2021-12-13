@@ -38,6 +38,7 @@ module.exports = gql`
     creator: User
     platform: Platform
     timesPlayed: Int!
+    usersThatPlayed: Int
     time: String
     rating: Float!
     ratingCount: Int!
@@ -45,6 +46,7 @@ module.exports = gql`
     difficulty: String!
     style: Style
     tags: [String]
+    category: String
     stats: Stats
     content: [Question]!
     backgroundImage: Image
@@ -57,11 +59,14 @@ module.exports = gql`
     quizId: String!
     score: Int!
     time: String!
+    timesTaken: Int
     badges: [String]
     record: [Int]
     last: Int
+    lastTime: String
     lastRecord: [Int]
     rating: Float
+    bestAttemptAt: String!
     modifiedAt: String!
     createdAt: String!
   }
@@ -72,13 +77,13 @@ module.exports = gql`
     points: Int!
     description: String
   }
-
   type Query {
     getUser(userId: ID!): User
     getUsers(name: String!): [User]
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
-    getSearchResults(query: String!, searchFilter: String): [SearchResult]
+    getQuizStats(quizId: ID!): Stats
+    getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
     getPlatform(platformId: ID!): Platform!
@@ -114,6 +119,20 @@ module.exports = gql`
   }
 
   union SearchResult = User | Quiz | Platform
+
+  input SearchResultFilter {
+    category: String
+    difficulty: String
+    level: Int
+    time: String
+  }
+
+  input SortingInput {
+    quiz: String
+    platform: String
+    user: String
+    dir: Int
+  }
 
   type Question {
     question: String!
@@ -187,6 +206,8 @@ module.exports = gql`
     timesPlayed: Int
     time: String
     rating: Float
+    usersThatPlayed: Int
+    category: String
     ratingCount: Int
     comments: [CommentInput]
     difficulty: String
@@ -206,9 +227,12 @@ module.exports = gql`
     time: String
     badges: [String]
     record: [Int]
+    timesTaken: Int
     last: Int
+    lastTime: String
     lastRecord: [Int]
     rating: Float
+    bestAttemptAt: String
     modifiedAt: String
     createdAt: String
   }

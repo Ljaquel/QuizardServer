@@ -20,46 +20,54 @@ module.exports = {
     },
   },
   Query: {
-    getSearchResults: async (_, { query, searchFilter }, context) => {
+    getSearchResults: async (_, { query, searchFilter, sorting, filter:filters }, context) => {
       if(searchFilter === "") return []
+      let dir = sorting.dir
       let results = [];
       let users = [];
       let quizzes = [];
       let platforms = [];
+      let srt = sorting.user
       const $regex = new RegExp(query, "i");
       switch (searchFilter) {
         case "User":
-          users = await User.find({
-            $or: [{ username: $regex }, { name: $regex }],
-          });
+          srt = sorting.user
+          users = await User.find({ $or: [{ username: $regex }, { name: $regex }], })
+            .sort({[srt&&srt!==''?srt:"name"]: dir});
           results = users;
           break;
         case "Quiz":
-          quizzes = await Quiz.find({ name: { $regex }, published: true })
+          srt = sorting.quiz
+          quizzes = await Quiz.find({ name: { $regex }, published: true, ...filters })
+            .sort({[srt&&srt!==''?srt:"rating"]: dir})
             .populate({ path: 'creator', select: userFieldsToPopulate })
             .populate({ path: 'platform', select: platformFieldsToPopulate })
-            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
+            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});           
           results = quizzes;
           break;
         case "Platform":
-          platforms = await Platform.find({ name: { $regex }})
-            .populate({ path: 'creator', select: userFieldsToPopulate });
+          srt = sorting.platform
+          platforms = await Platform.find({ name: { $regex }, ...filters})
+            .populate({ path: 'creator', select: userFieldsToPopulate })
+            .sort({[srt&&srt!==''?srt:"name"]: dir});;
           results = platforms;
           break;
         case "Tag":
-          quizzes = await Quiz.find({ tags: { $elemMatch: { $regex } }, published: true })
+          srt = sorting.quiz
+          quizzes = await Quiz.find({ tags: { $elemMatch: { $regex } }, published: true, ...filters })
             .populate({ path: 'creator', select: userFieldsToPopulate })
             .populate({ path: 'platform', select: platformFieldsToPopulate })
-            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
+            .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }})
+            .sort({[srt&&srt!==''?srt:"rating"]: dir});
           results = quizzes;
           break;
         default:
-          users = await User.find({ $or: [{ username: $regex }, { name: $regex }] });
-          quizzes = await Quiz.find({ name: { $regex } })
+          users = await User.find({ $or: [{ username: $regex }, { name: $regex }], ...filters });
+          quizzes = await Quiz.find({ name: { $regex }, ...filters })
             .populate({ path: 'creator', select: userFieldsToPopulate })
             .populate({ path: 'platform', select: platformFieldsToPopulate })
             .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
-          platforms = await Platform.find({ name: { $regex }})
+          platforms = await Platform.find({ name: { $regex }, ...filters})
             .populate({ path: 'creator', select: userFieldsToPopulate });
           results = [...users, ...quizzes, ...platforms];
           break;

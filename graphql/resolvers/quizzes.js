@@ -1,10 +1,22 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 const Quiz = require("../../models/Quiz");
+const Result = require("../../models/Result");
 const checkAuth = require("../../util/check-auth");
 const cloudinary = require("../../util/cloudinary");
 
 const userFieldsToPopulate = '_id name username'
 const platformFieldsToPopulate = '_id name'
+
+function getAverageTime(array) {
+  var times = [3600, 60, 1],
+  parts = array.map(s => s.split(':').reduce((s, v, i) => s + times[i] * v, 0)),
+  avg = Math.round(parts.reduce((a, b) => a + b, 0) / parts.length);
+
+  return times
+    .map(t => [Math.floor(avg / t), avg %= t][0])
+    .map(v => v.toString().padStart(2, 0))
+    .join(':');
+}
 
 module.exports = {
   Query: {
@@ -32,6 +44,31 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async getQuizStats(_, { quizId }) {
+      try {
+        let stats = {lowestScore: 100, highestScore:0, averageScore: 0, averageTime: ''}
+        let id =  new ObjectId(quizId)
+
+        const results = await Result.find({quizId: id});
+
+        let scoreSum = 0
+        let times = []
+        for(let i=0; i < results.length; i++) {
+          scoreSum += results[i].score
+          times.push(results[i].time)
+          if(results[i].score < stats.lowestScore) stats.lowestScore = results[i].score
+          if(results[i].score > stats.highestScore) stats.highestScore = results[i].score
+        }
+        stats.averageScore = scoreSum/results.length
+        
+        stats.averageTime = getAverageTime(times)
+
+        if(stats) return stats
+        else { throw new Error("Quiz not found") }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
   Mutation: {
     async createQuiz(_, { name, creatorId, platformId }, context) {
@@ -45,11 +82,12 @@ module.exports = {
           publishedDate: "",
           published: false,
           timesPlayed: 0,
+          usersThatPlayed: 0,
           time: "00:10:00",
           rating: 0.0,
           ratingCount: 0,
           comments: [],
-          difficulty: "easy",
+          difficulty: "Easy",
           style: {
             color: "#FFFFFF",
             questionColor: "#475047",
@@ -57,6 +95,7 @@ module.exports = {
             choiceColor: "#475047",
           },
           tags: [],
+          category: 'Other',
           stats: {
             averageScore: null,
             lowestScore: null,
