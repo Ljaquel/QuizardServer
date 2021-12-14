@@ -1,6 +1,9 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 const Quiz = require("../../models/Quiz");
 const Result = require("../../models/Result");
+const Notification = require("../../models/Notification");
+const Platform = require("../../models/Platform");
+const User = require("../../models/User");
 const checkAuth = require("../../util/check-auth");
 const cloudinary = require("../../util/cloudinary");
 
@@ -50,6 +53,7 @@ module.exports = {
         let id =  new ObjectId(quizId)
 
         const results = await Result.find({quizId: id});
+        if(results.length ===0) return {lowestScore: 0, highestScore:0, averageScore: 0, averageTime: '0'}
 
         let scoreSum = 0
         let times = []
@@ -176,6 +180,47 @@ module.exports = {
       try {
         const filter = { _id: new ObjectId(quizId) };
         await Quiz.findOneAndUpdate( filter, { $set: update }, { new: true });
+
+        if(update.published === true) {
+          const quiz = await Quiz.findById(filter._id)
+          const user = await User.findById(quiz.creator)
+          const platform = await Platform.findById(quiz.platform)
+
+          let uFollowers = user.followers
+          let pFollowers = platform.followers
+
+          for (let i=0; i<pFollowers.length; i++) {
+            if(uFollowers.includes(pFollowers[i])) pFollowers.splice(i, 1)
+          }
+
+          for(let i=0; i< uFollowers.length; i++) {
+            let newNoti = new Notification({
+              type:"User",
+              fromU: user._id,
+              fromP: platform._id,
+              subject: quiz._id,
+              seen: false,
+              to: uFollowers[i],
+              message: `${user.name} has published ${quiz.name}`,
+              createdAt: new Date(),
+            })
+            await newNoti.save();
+          }
+
+          for(let i=0; i< pFollowers.length; i++) {
+            let newNoti = new Notification({
+              type:"Platform",
+              fromU: user._id,
+              fromP: platform._id,
+              subject: quiz._id,
+              seen: false,
+              to: pFollowers[i],
+              message: `${quiz.name} has been published under ${platform.name}`,
+              createdAt: new Date(),
+            })
+            await newNoti.save();
+          }
+        }
         return true;
       }
       catch(err) {
