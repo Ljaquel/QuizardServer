@@ -4,6 +4,7 @@ const quizzesResolvers = require("./quizzes");
 const globalResolvers = require("./global");
 const resultsResolvers = require("./results");
 const badgesResolvers = require("./badges");
+const notificationsResolvers = require("./notifications");
 
 module.exports = {
   Query: {
@@ -13,6 +14,7 @@ module.exports = {
     ...globalResolvers.Query,
     ...resultsResolvers.Query,
     ...badgesResolvers.Query,
+    ...notificationsResolvers.Query,
   },
   Mutation: {
     ...usersResolvers.Mutation,
@@ -21,6 +23,7 @@ module.exports = {
     ...globalResolvers.Mutation,
     ...resultsResolvers.Mutation,
     ...badgesResolvers.Mutation,
+    ...notificationsResolvers.Mutation,
   },
   SearchResult: globalResolvers.SearchResult,
 };

@@ -77,17 +77,45 @@ module.exports = gql`
     points: Int!
     description: String
   }
+  type Notification {
+    _id: ID
+    type: String,
+    to: User
+    fromU: User
+    fromP: Platform
+    subject: Quiz
+    message: String
+    seen: Boolean
+    createdAt: String
+  }
+  input NotificationInput {
+    _id: ID
+    type: String,
+    to: ID
+    fromU: ID
+    fromP: ID
+    subject: ID
+    message: String
+    seen: Boolean
+    createdAt: String
+  }
+
   type Query {
     getUser(userId: ID!): User
     getUsers(name: String!): [User]
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
-    getQuizStats(quizId: ID!): Stats
+    getQuizStats(quizId: ID): Stats
+    getQuizzesAdvanced(filters: QuizInput, sorting: SortingInput, limit: Int): [Quiz]
+    getPlatformsAdvanced(filters: PlatformInput, sorting: SortingInput, limit: Int): [Platform]
+    getTrendingQuizzes: [Quiz]
     getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
     getPlatform(platformId: ID!): Platform!
     getPlatforms(filters: PlatformInput): [Platform]
+    getNotifications(filters: NotificationInput): [Notification]
+    getLeaderboard: [User]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
@@ -111,6 +139,8 @@ module.exports = gql`
     createComment(quizId: ID!, user: ID!, body: String!): Boolean!
     deleteComment(quizId: ID!, commentId: ID!): Boolean!
 
+    updateNotification(notificationId: ID, seen: Boolean): Boolean!
+    
     updateImage(type: String, _id: ID!, field: String, publicId: String, url: String): Boolean!
 
     createBadge(badgeInput: BadgeInput!): Badge!

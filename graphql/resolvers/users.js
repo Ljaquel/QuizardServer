@@ -39,6 +39,17 @@ module.exports = {
         throw new Error(err);
       }
     },
+    getLeaderboard: async () => {
+      try {
+        const users = await User.find( { points: { $gte: 1 }} ).sort({ points: -1});
+        if (!users) throw new Error("User does not exist");
+        let res = [...users]
+        return res.slice(0, 10);
+      } catch (err) {
+        console.log(err);
+        throw new Error(err);
+      }
+    },
   },
   Mutation: {
     async login(_, { username, password }) {
