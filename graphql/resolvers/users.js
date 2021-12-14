@@ -107,7 +107,7 @@ module.exports = {
         name,
         level: 1,
         points: 0,
-        color: "#ffffff",
+        color: "#7f8ab5",
         avatar: {
           publicId: "",
           url: ""

@@ -53,7 +53,7 @@ module.exports = {
             publicId: "",
             url: ""
           },
-          bannerColor: "#ffffff",
+          bannerColor: "#7f8ab5",
           followers: [],
           following: [],
           rating: 0.0,
