@@ -17,6 +17,16 @@ module.exports = {
         console.log(JSON.stringify(err, null, 2));
         throw new Error(err);
       }
+    },
+    async getBadges(_, { filter, limit }) {
+      try {
+        const badges = Badge.find({ filter })
+          .sort({ modifiedAt: -1 })
+          .limit(limit);
+        return badges;
+      } catch (error) {
+        throw new Error(err);
+      }
     }
   },
   Mutation: {
