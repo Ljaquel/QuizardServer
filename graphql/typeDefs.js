@@ -117,6 +117,7 @@ module.exports = gql`
     getPlatforms(filters: PlatformInput): [Platform]
     getNotifications(filters: NotificationInput): [Notification]
     getLeaderboard: [User]
+    getQuizzesNamesList(list: [ID]): [String]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

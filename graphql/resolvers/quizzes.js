@@ -58,6 +58,21 @@ module.exports = {
         throw new Error(err);
       }
     },
+
+    async getQuizzesNamesList(_, { list }) {
+      try {
+        let ids = list.map(function(id) { return new ObjectId(id) } )
+        const quizzes = await Quiz.find({ _id: {$in: ids}})
+          .populate({ path: 'creator', select: userFieldsToPopulate })
+          .populate({ path: 'platform', select: platformFieldsToPopulate })
+          .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
+        let res = quizzes.map(function(q) { return (q._id+' - - - '+q.name) })
+        return res
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+
     async getQuizStats(_, { quizId }) {
       try {
         let stats = {lowestScore: 100, highestScore:0, averageScore: 0, averageTime: ''}
