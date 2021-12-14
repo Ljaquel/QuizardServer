@@ -112,6 +112,7 @@ module.exports = gql`
     getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
+    getBadges(filter: BadgeInput!, limit: Int): [Badge]
     getPlatform(platformId: ID!): Platform!
     getPlatforms(filters: PlatformInput): [Platform]
     getNotifications(filters: NotificationInput): [Notification]
