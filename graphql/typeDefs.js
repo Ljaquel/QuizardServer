@@ -29,6 +29,10 @@ module.exports = gql`
     following: [String]
     createdAt: String!
   }
+  type Quizzz {
+    _id: ID
+    name: String
+  }
   type Quiz {
     _id: ID!
     name: String!
@@ -75,7 +79,7 @@ module.exports = gql`
     key: String
     title: String
     description: String
-    quiz: Quiz
+    quiz: Quizzz
     createdAt: String
   }
   type Notification {
