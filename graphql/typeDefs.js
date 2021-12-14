@@ -106,12 +106,15 @@ module.exports = gql`
     getQuiz(quizId: ID!): Quiz!
     getQuizzes(filters: QuizInput): [Quiz]
     getQuizStats(quizId: ID): Stats
+    getQuizzesAdvanced(filters: QuizInput, sorting: SortingInput, limit: Int): [Quiz]
+    getTrendingQuizzes: [Quiz]
     getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
     getBadge(badgeId: ID!): Badge
     getPlatform(platformId: ID!): Platform!
     getPlatforms(filters: PlatformInput): [Platform]
     getNotifications(filters: NotificationInput): [Notification]
+    getLeaderboard: [User]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

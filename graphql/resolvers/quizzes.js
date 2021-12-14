@@ -47,6 +47,17 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async getQuizzesAdvanced(_, { filters, sorting, limit }) {
+      try {
+        const quizzes = await Quiz.find(filters).sort({ [sorting.quiz]: sorting.dir}).limit(limit)
+          .populate({ path: 'creator', select: userFieldsToPopulate })
+          .populate({ path: 'platform', select: platformFieldsToPopulate })
+          .populate({ path: 'comments', populate: { path: 'user', select: userFieldsToPopulate }});
+        return quizzes
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
     async getQuizStats(_, { quizId }) {
       try {
         let stats = {lowestScore: 100, highestScore:0, averageScore: 0, averageTime: ''}
