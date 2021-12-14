@@ -1,4 +1,5 @@
 const { model, Schema } = require('mongoose');
+const { ObjectId } = Schema.Types;
 
 const resultSchema = new Schema({
   userId: String,
@@ -6,7 +7,22 @@ const resultSchema = new Schema({
   score: Number,
   time: String,
   timesTaken: Number,
-  badges: Array,
+  badge: {
+    key: String,
+    title: String,
+    description: String,
+    quiz: { type: ObjectId, ref: "Quiz" },
+    createdAt: String,
+  },
+  badges: [
+    {
+      key: String,
+      title: String,
+      description: String,
+      quiz: { type: ObjectId, ref: "Quiz" },
+      createdAt: String,
+    }
+  ],
   record: Array,
   rating: Number,
   last: Number,

@@ -13,7 +13,6 @@ module.exports = {
     ...quizzesResolvers.Query,
     ...globalResolvers.Query,
     ...resultsResolvers.Query,
-    ...badgesResolvers.Query,
     ...notificationsResolvers.Query,
   },
   Mutation: {
@@ -22,7 +21,6 @@ module.exports = {
     ...quizzesResolvers.Mutation,
     ...globalResolvers.Mutation,
     ...resultsResolvers.Mutation,
-    ...badgesResolvers.Mutation,
     ...notificationsResolvers.Mutation,
   },
   SearchResult: globalResolvers.SearchResult,

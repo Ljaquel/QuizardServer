@@ -17,5 +17,3 @@ const badgeSchema = new Schema({
     default: new Date().toISOString()
   }
 });
-
-module.exports = model("Badge", badgeSchema);

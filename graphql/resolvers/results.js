@@ -15,7 +15,9 @@ module.exports = {
 
         if(filters?.quizId) prepFilters.quizId = new ObjectId(filters.quizId)
 
-        const results = await Result.find(prepFilters).sort({ createdAt: -1 });
+        const results = await Result.find(prepFilters).sort({ createdAt: -1 })
+          .populate({ path: 'badge', populate: { path: 'quiz', select: '_id name' }})
+          .populate({ path: 'badges', populate: { path: 'quiz', select: '_id name' }});
         return results
 
       } catch(err){

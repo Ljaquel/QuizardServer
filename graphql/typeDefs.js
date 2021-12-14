@@ -60,7 +60,8 @@ module.exports = gql`
     score: Int!
     time: String!
     timesTaken: Int
-    badges: [String]
+    badge: Badge
+    badges: [Badge]
     record: [Int]
     last: Int
     lastTime: String
@@ -71,11 +72,11 @@ module.exports = gql`
     createdAt: String!
   }
   type Badge {
-    resultId: ID!
-    badgeType: String!
-    title: String!
-    points: Int!
+    key: String
+    title: String
     description: String
+    quiz: Quiz
+    createdAt: String
   }
   type Notification {
     _id: ID
@@ -195,11 +196,10 @@ module.exports = gql`
   }
 
   input BadgeInput {
-    badgeType: String!
-    resultId: ID!
-    title: String!
-    description: String!
-    points: Int!
+    key: String
+    title: String
+    description: String
+    quiz: ID
     createdAt: String
   }
   input ImageInput {
@@ -257,7 +257,8 @@ module.exports = gql`
     quizId: String
     score: Int
     time: String
-    badges: [String]
+    badge: BadgeInput
+    badges: [BadgeInput]
     record: [Int]
     timesTaken: Int
     last: Int
