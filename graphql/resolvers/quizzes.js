@@ -201,7 +201,7 @@ module.exports = {
               subject: quiz._id,
               seen: false,
               to: uFollowers[i],
-              message: `${user.name} has published ${quiz.name}`,
+              message: `${user.username} published ${quiz.name}`,
               createdAt: new Date(),
             })
             await newNoti.save();
@@ -215,7 +215,7 @@ module.exports = {
               subject: quiz._id,
               seen: false,
               to: pFollowers[i],
-              message: `${quiz.name} has been published under ${platform.name}`,
+              message: `${quiz.name} published under ${platform.name}`,
               createdAt: new Date(),
             })
             await newNoti.save();
