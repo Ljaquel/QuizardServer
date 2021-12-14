@@ -17,6 +17,15 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async getPlatformsAdvanced(_, { filters, sorting, limit }) {
+      try {
+        const platforms = await Platform.find(filters).sort({ [sorting.platform]: sorting.dir}).limit(limit)
+        .populate({ path: 'creator', select: userFieldsToPopulate });
+        return platforms
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
     async getPlatform(_, { platformId }) {
       try {
         const platform = await Platform.findById(platformId)

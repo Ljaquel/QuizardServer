@@ -107,6 +107,7 @@ module.exports = gql`
     getQuizzes(filters: QuizInput): [Quiz]
     getQuizStats(quizId: ID): Stats
     getQuizzesAdvanced(filters: QuizInput, sorting: SortingInput, limit: Int): [Quiz]
+    getPlatformsAdvanced(filters: PlatformInput, sorting: SortingInput, limit: Int): [Platform]
     getTrendingQuizzes: [Quiz]
     getSearchResults(query: String!, searchFilter: String, sorting: SortingInput, filter: SearchResultFilter): [SearchResult]
     getResults(filters: ResultInput): [Result]
